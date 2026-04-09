@@ -6,7 +6,7 @@
 #include <windows.h>
 
 #include <Core/ModuleProvider.hpp>
-#include <Core/OffsetPtr.hpp>
+#include <Core/NativeLayout.hpp>
 
 #include <RED4ext.hpp>
 

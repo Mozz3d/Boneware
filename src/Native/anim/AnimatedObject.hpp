@@ -6,8 +6,7 @@
 #include <Native/anim/MetaPose.hpp>
 #include <Native/anim/AnimatedObjectPart.hpp>
 
-namespace Native::anim::AnimatedObject
-{
-using m_metaRigReference = OffsetField<RED4ext::anim::AnimatedObject, Native::anim::MetaRigReference, 0x00>;
-using m_metaPose = OffsetField<RED4ext::anim::AnimatedObject, RED4ext::UniquePtr<Native::anim::MetaPose>, 0x18>;
-}
+NATIVE_LAYOUT_BEGIN(RED4ext::anim::AnimatedObject)
+	NATIVE_LAYOUT_FIELD(Native::anim::MetaRigReference, m_metaRigRef, 0x00)
+	NATIVE_LAYOUT_FIELD(RED4ext::UniquePtr<Native::anim::MetaPose>, m_metaPose, 0x18)
+NATIVE_LAYOUT_END()

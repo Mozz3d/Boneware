@@ -2,6 +2,10 @@
 
 #include <Native/ent/AnimatedComponent.hpp>
 
+struct AnimatedComponentEx;
+
+NATIVE_LAYOUT_ALIAS(AnimatedComponentEx, RED4ext::ent::AnimatedComponent)
+
 struct AnimatedComponentEx : RED4ext::ent::AnimatedComponent
 {
     RED4ext::Handle<RED4ext::anim::Rig> GetRig()
@@ -11,13 +15,13 @@ struct AnimatedComponentEx : RED4ext::ent::AnimatedComponent
 
     void ForceReferencePose(bool aShouldForce)
     {
-        Native::ent::AnimatedComponent::m_rootAnimObjPart(this)->forceReferencePose = aShouldForce;
+        NATIVE_FIELD(this,m_rootAnimObjPart)->forceReferencePose = aShouldForce;
     }
 
     RED4ext::DynArray<RED4ext::QsTransform> GetCurrentPoseTransforms()
     {
-        auto animObj = Native::ent::AnimatedComponent::m_animObj(this);
-        return Native::anim::AnimatedObject::m_metaPose(animObj)->m_transforms;
+        RED4ext::anim::AnimatedObject* animObj = NATIVE_FIELD(this,m_animObj);
+        return NATIVE_FIELD(animObj,m_metaPose)->m_transforms;
     }
 };
 
