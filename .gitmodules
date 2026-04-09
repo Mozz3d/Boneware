@@ -1,0 +1,6 @@
+[submodule "deps/RED4ext.SDK"]
+	path = deps/RED4ext.SDK
+	url = https://github.com/WopsS/RED4ext.SDK
+[submodule "deps/cp2077-red-lib"]
+	path = deps/cp2077-red-lib
+	url = https://github.com/psiberx/cp2077-red-lib
