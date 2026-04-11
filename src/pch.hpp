@@ -6,9 +6,11 @@
 #include <windows.h>
 
 #include <Core/ModuleProvider.hpp>
-#include <Core/NativeLayout.hpp>
+#include <Core/NativeUtils.hpp>
 
 #include <RED4ext.hpp>
+
+#include <Relocation.hpp>
 
 #include <Containers/Span.hpp>
 

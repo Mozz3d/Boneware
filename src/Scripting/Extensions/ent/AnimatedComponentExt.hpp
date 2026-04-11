@@ -2,11 +2,9 @@
 
 #include <Native/ent/AnimatedComponent.hpp>
 
-struct AnimatedComponentEx;
+NATIVE_UTILS_ALIAS(AnimatedComponentExt, RED4ext::ent::AnimatedComponent)
 
-NATIVE_LAYOUT_ALIAS(AnimatedComponentEx, RED4ext::ent::AnimatedComponent)
-
-struct AnimatedComponentEx : RED4ext::ent::AnimatedComponent
+struct AnimatedComponentExt : RED4ext::ent::AnimatedComponent
 {
     RED4ext::Handle<RED4ext::anim::Rig> GetRig()
     {
@@ -25,7 +23,7 @@ struct AnimatedComponentEx : RED4ext::ent::AnimatedComponent
     }
 };
 
-RTTI_EXPAND_CLASS(RED4ext::ent::AnimatedComponent, AnimatedComponentEx,
+RTTI_EXPAND_CLASS(RED4ext::ent::AnimatedComponent, AnimatedComponentExt,
 {
     RTTI_METHOD(GetRig);
     RTTI_METHOD(ForceReferencePose);

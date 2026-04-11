@@ -6,7 +6,7 @@ RED4EXT_C_EXPORT bool RED4EXT_CALL Main(RED4ext::v1::PluginHandle aHandle, RED4e
     {
     case RED4ext::v1::EMainReason::Load:
     {
-        printf("CYBERPUNK IMAGE BASE: %p\n", GetModuleHandle(nullptr));
+        //printf("CYBERPUNK IMAGE BASE: %p\n", GetModuleHandle(nullptr));
 
         ModuleProvider moduleProvider(aHandle);
 
@@ -16,8 +16,6 @@ RED4EXT_C_EXPORT bool RED4EXT_CALL Main(RED4ext::v1::PluginHandle aHandle, RED4e
         // Register scripts directory
         auto scriptsDir = moduleProvider.GetDirectory() / L"Scripts";
         aSdk->scripts->Add(aHandle, scriptsDir.c_str());
-
-        printf("BONEWARE DIRECTORY: %s\n", moduleProvider.GetPath().string().c_str());
 
 		return true;
         break;

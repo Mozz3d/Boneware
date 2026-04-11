@@ -1,19 +1,16 @@
 #pragma once
 
-namespace RED4ext
-{
-template<typename T>
-class UniquePtr;
+#include <RED4ext/Memory/UniquePtr.hpp>
 
 template<typename T>
 struct is_unique_ptr : std::false_type {};
 
 template<typename T>
-struct is_unique_ptr<UniquePtr<T>> : std::true_type {};
+struct is_unique_ptr<RED4ext::UniquePtr<T>> : std::true_type {};
 
 template<typename U>
 constexpr bool is_unique_ptr_v = is_unique_ptr<U>::value;
-}
+
 
 // type resolution hell
 template<typename T, size_t OFFSET>
@@ -26,7 +23,7 @@ public:
 
     static constexpr bool isIndirect = 
         (std::is_pointer_v<T> && !std::is_void_v<std::remove_pointer_t<T>>) ||
-        RED4ext::is_unique_ptr_v<T>;
+        is_unique_ptr_v<T>;
 
     constexpr OffsetPtr(const void* aBase)
         : m_address(std::bit_cast<uintptr_t>(aBase) + Offset)
