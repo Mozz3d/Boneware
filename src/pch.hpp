@@ -1,14 +1,18 @@
 #pragma once
 
+#define RED4EXT_HEADER_ONLY
+
 #include <iostream>
 #include <filesystem>
+#include <functional>
 
 #include <windows.h>
 
-#include <Core/ModuleProvider.hpp>
-#include <Core/NativeUtils.hpp>
-
 #include <RED4ext.hpp>
+#include <RedLib.hpp>
+
+#include <Core/Plugin.hpp>
+#include <Core/NativeInfoUtils.hpp>
 
 #include <Relocation.hpp>
 
@@ -21,4 +25,4 @@
 #include <Scripting/Natives/Vector4.hpp>
 #include <Scripting/Natives/Generated/QsTransform.hpp>
 
-#include <RedLib.hpp>
+#include <Patches/ISkinTargetComponent.hpp>

@@ -4,6 +4,9 @@ workspace "Boneware"
 	language "C++"
 	cppdialect "C++20"
 	defines { "_CRT_SECURE_NO_WARNINGS", "NOMINMAX" } 
+	filter "system:windows"
+		usestandardpreprocessor "On"
+	filter{}
 
 project "Boneware"
 	kind "SharedLib"

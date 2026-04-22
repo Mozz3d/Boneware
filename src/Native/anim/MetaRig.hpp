@@ -26,14 +26,11 @@ struct MetaRigBank
 
 struct MetaRigReference
 {
-	using Release_t = void(*)(MetaRigReference*);
-	static RED4ext::UniversalRelocFunc<Release_t> Release;
+	//using Release_t = void(*)(MetaRigReference*);
+	//static const RED4ext::UniversalRelocFunc<Release_t> Release{ 525864448 };
 
 	int32_t m_hash;
 	RED4ext::anim::MetaRig* m_metaRig;
 	MetaRigBank* m_metaRigBank;
 };
-
-RED4ext::UniversalRelocFunc<MetaRigReference::Release_t> MetaRigReference::Release(525864448);
-
-}
+} // namespace Native::anim
