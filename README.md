@@ -23,4 +23,10 @@ if ImGui.Button("Sample Animation") then
         print(i, track)
     end
 end
+
+if ImGui.Button("Scale FPP Torso") then
+    player = Game.GetPlayer()
+    torso = player:FindComponentByName('t0_000_pwa_fpp__torso')
+    torso.visualScale = ToVector3{x=2.0, y=2.0, z=2.0}
+end
 ```
