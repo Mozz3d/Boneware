@@ -3,7 +3,7 @@
 #include <Native/anim/Animation.hpp>
 #include <RED4ext/Scripting/Natives/animAnimationBufferCompressed.hpp>
 
-NATIVE_WRAP_ALIAS(AnimationExt, RED4ext::anim::Animation)
+NATIVE_INFO_ALIAS(AnimationExt, RED4ext::anim::Animation)
 
 struct AnimationExt : RED4ext::anim::Animation
 {

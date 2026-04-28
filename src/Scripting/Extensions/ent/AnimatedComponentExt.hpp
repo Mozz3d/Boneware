@@ -2,7 +2,7 @@
 
 #include <Native/ent/AnimatedComponent.hpp>
 
-NATIVE_WRAP_ALIAS(AnimatedComponentExt, RED4ext::ent::AnimatedComponent)
+NATIVE_INFO_ALIAS(AnimatedComponentExt, RED4ext::ent::AnimatedComponent)
 
 struct AnimatedComponentExt : RED4ext::ent::AnimatedComponent
 {

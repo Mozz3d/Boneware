@@ -8,11 +8,16 @@ constexpr auto* AsAddress(T&& aData) {
         return std::addressof(aData);
 }
 
-template<typename T>
-struct NativeInfo;
-
 namespace Detail
 {
+template<typename T>
+using RawType = std::remove_pointer_t<std::remove_cvref_t<T>>;
+
+template<typename T>
+struct NativeInfoBase {
+    using OwnerType = T;
+};
+
 // Determine whether ABI will use RVO for this type.
 template<typename T>
 concept WillRVO = !std::is_void_v<T> && (sizeof(T) > 8 || !std::is_trivially_copyable_v<T>) && !std::is_floating_point_v<T>;
@@ -58,11 +63,18 @@ struct NativeMemberFunc<TOwner, TRet(TArgs...) const> : NativeMemberFunc<TOwner,
 }
 
 template<typename T>
-using NativeInfoOf = NativeInfo<std::remove_pointer_t<std::remove_cvref_t<T>>>;
+struct NativeInfo : std::conditional_t<
+    std::derived_from<T, Detail::NativeInfoBase<T>>,
+    T,
+    Detail::NativeInfoBase<T>
+> {};
 
-#define NATIVE_INFO_BEGIN(_owner, ...)                                           \
-    template<> struct NativeInfo<_owner> __VA_OPT__(: NativeInfo<__VA_ARGS__>) { \
-        using OwnerType = _owner;                     
+template<typename T>
+using NativeInfoOf = NativeInfo<Detail::RawType<T>>;
+
+#define NATIVE_INFO(_owner, ...) \
+    template<> struct NativeInfo<_owner> \
+        : Detail::NativeInfoBase<_owner> __VA_OPT__(, NativeInfo<__VA_ARGS__>)                
 
 #define NATIVE_MEMBER_FN(_type, _name, _hash) \
     struct _name : Detail::NativeMemberFunc<OwnerType, _type> { \
@@ -126,11 +138,12 @@ using NativeInfoOf = NativeInfo<std::remove_pointer_t<std::remove_cvref_t<T>>>;
         return *OffsetPtr<const _type, _offset>(aInstance);              \
     }  
 
-#define NATIVE_INFO_END() };
-
-#define NATIVE_WRAP_ALIAS(_derived, _base)                         \
+#define NATIVE_INFO_ALIAS(_derived, _base)                         \
     struct _derived;                                               \
     template<> struct NativeInfo<_derived> : NativeInfo<_base> {};
+
+#define NATIVE_TYPE(_type_def) _type_def : Detail::NativeInfoBase<_type_def>
+
 
 #define NATIVE_GET(_instance, _field_name) \
     NativeInfoOf<decltype(_instance)>::Get_##_field_name(AsAddress(_instance))
