@@ -3,7 +3,7 @@
 #include <Native/ent/ISkinTargetComponent.hpp>
 #include <Native/WorldTransform.hpp>
 
-static inline void ISkinTargetComponent_OnTransformUpdated(RED4ext::ent::ISkinTargetComponent* aThis, RED4ext::Box& aOutBounds)
+inline void ISkinTargetComponent_OnTransformUpdated(RED4ext::ent::ISkinTargetComponent* aThis, RED4ext::Box& aOutBounds)
 {
 	RED4ext::WorldTransform& worldTransform = aThis->worldTransform;
 	aOutBounds = NATIVE_CALL(worldTransform,TransformBox(NATIVE_GET(aThis,m_activeSkinBounds)));

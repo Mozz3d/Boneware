@@ -15,6 +15,7 @@
 #include <Core/NativeInfoUtils.hpp>
 
 #include <Relocation.hpp>
+#include <Callback.hpp>
 
 #include <Containers/Span.hpp>
 
@@ -25,4 +26,4 @@
 #include <Scripting/Natives/Vector4.hpp>
 #include <Scripting/Natives/Generated/QsTransform.hpp>
 
-#include <Patches/ISkinTargetComponent.hpp>
+#include <Patches/ISkinTargetComponentPatch.hpp>
