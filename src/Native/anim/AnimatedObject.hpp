@@ -8,6 +8,6 @@
 
 NATIVE_INFO(RED4ext::anim::AnimatedObject)
 {
-	NATIVE_FIELD(Native::anim::MetaRigReference, m_metaRigRef, 0x00)
-	NATIVE_FIELD(RED4ext::UniquePtr<Native::anim::MetaPose>, m_metaPose, 0x18)
+	NATIVE_FIELD(Native::anim::MetaRigReference, m_metaRigRef, 0x00);
+	NATIVE_FIELD(RED4ext::UniquePtr<Native::anim::MetaPose>, m_metaPose, 0x18);
 };

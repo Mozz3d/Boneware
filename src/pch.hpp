@@ -11,7 +11,9 @@
 #include <RED4ext.hpp>
 #include <RedLib.hpp>
 
+#include <Core/MacroUtils.hpp>
 #include <Core/Plugin.hpp>
+#include <Core/PtrUtils.hpp>
 #include <Core/NativeInfoUtils.hpp>
 
 #include <Relocation.hpp>
@@ -25,5 +27,6 @@
 #include <Scripting/Natives/animRig.hpp>
 #include <Scripting/Natives/Vector4.hpp>
 #include <Scripting/Natives/Generated/QsTransform.hpp>
-
-#include <Patches/ISkinTargetComponentPatch.hpp>
+#include <Scripting/Natives/Generated/WorldTransform.hpp>
+#include <Lib/VectorMath.hpp>
+#include <Lib/ScriptedUtils.hpp>

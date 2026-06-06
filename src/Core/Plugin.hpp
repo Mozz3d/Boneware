@@ -5,15 +5,27 @@
 
 class Plugin
 {
+private:
+	struct HookTarget
+	{
+		uintptr_t target;
+		void* detour;
+		void** original = nullptr;
+	};
+
 public:
 	static Plugin& Init(
 		RED4ext::v1::PluginHandle aHandle, 
-		const RED4ext::v1::Sdk* aSDK
+		const RED4ext::v1::Sdk* aSDK,
+		std::filesystem::path aScriptsSubDirectory = {}
 	)
 	{
 		static Plugin instance(aHandle, aSDK);
 		s_instance = &instance;
 		Red::TypeInfoRegistrar::RegisterDiscovered();
+		if (!s_registeredHooks.empty()) AttachRegisteredHooks();
+		if (!aScriptsSubDirectory.empty())
+			RegisterScriptsDirectory(ResolveModuleDirectory() / aScriptsSubDirectory);
 		return instance;
 	}
 
@@ -22,7 +34,7 @@ public:
 	Plugin(Plugin&&) = delete;
 	Plugin& operator=(Plugin&&) = delete;
 
-	[[nodiscard]] static const std::filesystem::path ResolveModulePath()
+	[[nodiscard]] static const std::filesystem::path ResolveModuleDirectory()
 	{
 		std::wstring path(MAX_PATH, L'\0');
 
@@ -33,12 +45,27 @@ public:
 		}
 
 		path.resize(pathSize);
-		return std::move(path);
+		return std::filesystem::path(path).parent_path();
 	}
 
 	static void RegisterScriptsDirectory(const std::filesystem::path& aDirectory)
 	{
 		s_instance->m_api->scripts->Add(s_instance->m_handle, aDirectory.c_str());
+	}
+
+	static bool RegisterHook(uintptr_t aTarget, void* aDetour, void** aOriginal = nullptr)
+	{
+		s_registeredHooks.push_back({ aTarget, aDetour, aOriginal });
+		return true;
+	}
+
+	static bool AttachRegisteredHooks()
+	{
+		for (auto registered : s_registeredHooks)
+		{
+			if (!AttachHook(registered.target, registered.detour, registered.original)) return false;
+		}
+		return true;
 	}
 
 	static bool AttachHook(uintptr_t aTarget, void* aCallback, void** aOriginal = nullptr)
@@ -53,6 +80,7 @@ public:
 
 private:
 	static inline Plugin* s_instance = nullptr;
+	static inline std::vector<HookTarget> s_registeredHooks;
 
 	Plugin( 
 		const RED4ext::v1::PluginHandle aHandle, 

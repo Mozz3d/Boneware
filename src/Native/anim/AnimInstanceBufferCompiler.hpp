@@ -11,14 +11,14 @@ struct AnimInstanceBufferCompiler
 	struct InputInfo
 	{
 		AnimInstanceVar* m_var;
-		uint8_t unk08[0x28 - 0x09];
+		uint8_t unk08[0x28 - 0x08];
 	};
 
 	struct VarInfo
 	{
 		AnimInstanceVar* m_var;
 		uint32_t m_size;
-		uint32_t m_alignment;
+		uint32_t m_align;
 	};
 
 	struct SharedVarInfo
@@ -26,6 +26,36 @@ struct AnimInstanceBufferCompiler
 		AnimInstanceVar* m_var;
 		uint8_t unk08[0x20 - 0x08];
 	};
+
+	template<typename T>
+	AnimInstanceBufferCompiler& AddVar(TAnimInstanceVar<T>& aVar)
+	{
+		VarInfo info{ &aVar, aVar.GetVarSize(), aVar.GetVarAlign()};
+		if (unkf8 < 1)
+		{
+			m_varsInfo.PushBack(info);
+		}
+		else
+		{
+			m_varsInfo1.PushBack(info);
+		}
+		return *this;
+	}
+
+	template<typename T>
+	AnimInstanceBufferCompiler& AddVar(TAnimInstanceArrayVar<T>& aArrayVar)
+	{
+		VarInfo info{ &aArrayVar, aArrayVar.GetVarSize(), aArrayVar.GetVarAlign()};
+		if (unkf8 < 1)
+		{
+			m_varsInfo.PushBack(info);
+		}
+		else
+		{
+			m_varsInfo1.PushBack(info);
+		}
+		return *this;
+	}
 
 	RED4ext::DynArray<InputInfo> m_inputsInfo;
 	RED4ext::DynArray<VarInfo> m_varsInfo;

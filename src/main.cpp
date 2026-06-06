@@ -6,12 +6,10 @@ RED4EXT_C_EXPORT bool RED4EXT_CALL Main(RED4ext::v1::PluginHandle aHandle, RED4e
     {
     case RED4ext::v1::EMainReason::Load:
     {
-        Plugin::Init(aHandle, aSdk);
-        Plugin::RegisterScriptsDirectory(Plugin::ResolveModulePath().parent_path() / "scripts");
-        // FIXME: this sucks, need to improve hooking semantics
-        Plugin::AttachHook(
-            NativeInfo<RED4ext::ent::ISkinTargetComponent>::OnTransformUpdated::Addr,
-            &ISkinTargetComponent_OnTransformUpdated
+        Plugin::Init(
+            aHandle, 
+            aSdk,
+            "scripts/" // scripts subdirectory
         );
 
         break;

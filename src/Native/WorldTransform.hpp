@@ -5,5 +5,5 @@
 
 NATIVE_INFO(RED4ext::WorldTransform)
 {
-	NATIVE_MEMBER_FN(RED4ext::Box(RED4ext::Box&), TransformBox, 1761285048)
+	NATIVE_MEMBER_FN(RED4ext::Box, TransformBox,(RED4ext::Box&), 1761285048);
 };

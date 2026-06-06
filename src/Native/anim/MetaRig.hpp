@@ -3,6 +3,11 @@
 #include <RED4ext/Scripting/Natives/animMetaRig.hpp>
 #include <RED4ext/Memory/Allocators.hpp>
 
+NATIVE_INFO(RED4ext::anim::MetaRig)
+{
+	NATIVE_MEMBER_FN(int16_t, FindBoneByName,(RED4ext::CName aName), 1842286434);
+};
+
 namespace Native::anim
 {
 struct MetaRigBank
