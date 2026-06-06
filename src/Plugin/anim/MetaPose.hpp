@@ -8,7 +8,10 @@ struct BoneOffsetEntry
 	RED4ext::QsTransform transform;
 };
 
-RTTI_DEFINE_CLASS(BoneOffsetEntry, "BoneOffsetEntry", {});
+RTTI_DEFINE_CLASS(BoneOffsetEntry, {
+	RTTI_PROPERTY(name);
+	RTTI_PROPERTY(transform);
+});
 
 struct MetaPoseScriptRef
 {
@@ -29,7 +32,7 @@ struct MetaPoseScriptRef
 	Native::anim::MetaPose* ptr = nullptr;
 };
 
-RTTI_DEFINE_CLASS(MetaPoseScriptRef, "MetaPoseScriptRef",
+RTTI_DEFINE_CLASS(MetaPoseScriptRef, "MetaPoseRef",
 {
 	RTTI_METHOD(GetTransforms);
 	RTTI_METHOD(GetTracks);
