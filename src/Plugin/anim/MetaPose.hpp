@@ -2,13 +2,13 @@
 
 #include <Native/anim/MetaPose.hpp>
 
-struct BoneOffsetEntry
+struct AdditiveTransformEntry
 {
 	RED4ext::CName name;
 	RED4ext::QsTransform transform;
 };
 
-RTTI_DEFINE_CLASS(BoneOffsetEntry, {
+RTTI_DEFINE_CLASS(AdditiveTransformEntry, {
 	RTTI_PROPERTY(name);
 	RTTI_PROPERTY(transform);
 });

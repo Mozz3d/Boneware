@@ -26,12 +26,13 @@ struct AnimatedObjectPartEx : Native::anim::AnimatedObjectPart
 				metaPoseRef->ptr = aContext.metaPose;
 			}
 		}
-		if (auto* scriptProp = component->GetType()->GetProperty("persistentBoneOffsets"))
+
+		if (auto* scriptProp = component->GetType()->GetProperty("additiveTransforms"))
 		{
-			if (auto* offsets = scriptProp->GetValuePtr<RED4ext::DynArray<BoneOffsetEntry>>(component))
+			if (auto* entries = scriptProp->GetValuePtr<RED4ext::DynArray<AdditiveTransformEntry>>(component))
 			{
 				RED4ext::DynArray<RED4ext::CName>& metaBoneNames = aContext.metaRig->boneNames;
-				for (const auto& entry : *offsets)
+				for (const auto& entry : *entries)
 				{
 					auto it = metaBoneNames.Find(entry.name);
 					if (it == metaBoneNames.End()) continue;

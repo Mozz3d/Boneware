@@ -15,17 +15,6 @@ struct AnimatedComponentEx : RED4ext::ent::AnimatedComponent
     {
         NATIVE_GET(this,m_rootAnimObjPart)->forceReferencePose = aShouldForce;
     }
-
-    void ApplyBoneOffset(RED4ext::CName aName, RED4ext::QsTransform& aTransform)
-    {
-        if (auto* scriptProp = GetType()->GetProperty("persistentBoneOffsets"))
-        {
-            if (auto* entries = scriptProp->GetValuePtr<RED4ext::DynArray<BoneOffsetEntry>>(this))
-            {
-                entries->PushBack({ aName, aTransform });
-            }
-        }
-    }
 };
 
 NATIVE_EXPAND(RED4ext::ent::AnimatedComponent, AnimatedComponentEx)
@@ -36,5 +25,4 @@ RTTI_EXPAND_CLASS(RED4ext::ent::AnimatedComponent, AnimatedComponentEx,
 {
     RTTI_METHOD(GetRig);
     RTTI_METHOD(ForceReferencePose);
-    RTTI_METHOD(ApplyBoneOffset);
 });
