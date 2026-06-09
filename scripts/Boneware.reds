@@ -44,6 +44,15 @@ public func AddAdditiveRotation(name: CName, rotation: script_ref<Quaternion>) {
 }
 
 @addMethod(Entity)
+public func AddAdditiveScale(name: CName, scale: script_ref<Vector3>) {
+    let entry = new AdditiveTransformEntry();
+    entry.name = name;
+    entry.transform = new QsTransform();
+    entry.transform.Scale = Vector4.Vector3To4(Deref(scale));
+    ArrayPush(this.additiveTransforms, entry);
+}
+
+@addMethod(Entity)
 public func RemoveAdditiveTransform(name: CName) {
     let i = ArraySize(this.additiveTransforms) - 1;
     while i >= 0 {
