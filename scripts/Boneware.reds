@@ -13,34 +13,11 @@ public native struct MetaRigRef {
     public static native func GetBoneNames(self: script_ref<MetaRigRef>) -> array<CName>
 }
 
-@if(ModuleExists("Codeware"))
 
-@addField(AnimatedComponent)
-private let metaPoseRef: MetaPoseRef;
-
-@addField(AnimatedComponent)
-private let metaRigRef: MetaRigRef;
-
-@addField(AnimatedComponent)
+@addField(Entity)
 public let additiveTransforms: array<AdditiveTransformEntry>;
 
-@addMethod(AnimatedComponent)
-public native func GetRig() -> ref<animRig>;
-
-@addMethod(AnimatedComponent)
-public native func ForceReferencePose(force: Bool);
-
-@addMethod(AnimatedComponent)
-public func GetMetaPose() -> MetaPoseRef {
-    return this.metaPoseRef;
-}
-
-@addMethod(AnimatedComponent)
-public func GetMetaRig() -> MetaRigRef {
-    return this.metaRigRef;
-}
-
-@addMethod(AnimatedComponent)
+@addMethod(Entity)
 public func AddAdditiveTransform(name: CName, transform: script_ref<QsTransform>) {
     let entry = new AdditiveTransformEntry();
     entry.name = name;
@@ -48,7 +25,7 @@ public func AddAdditiveTransform(name: CName, transform: script_ref<QsTransform>
     ArrayPush(this.additiveTransforms, entry);
 }
 
-@addMethod(AnimatedComponent)
+@addMethod(Entity)
 public func AddAdditiveTranslation(name: CName, translation: script_ref<Vector4>) {
     let entry = new AdditiveTransformEntry();
     entry.name = name;
@@ -57,7 +34,7 @@ public func AddAdditiveTranslation(name: CName, translation: script_ref<Vector4>
     ArrayPush(this.additiveTransforms, entry);
 }
 
-@addMethod(AnimatedComponent)
+@addMethod(Entity)
 public func AddAdditiveRotation(name: CName, rotation: script_ref<Quaternion>) {
     let entry = new AdditiveTransformEntry();
     entry.name = name;
@@ -66,7 +43,7 @@ public func AddAdditiveRotation(name: CName, rotation: script_ref<Quaternion>) {
     ArrayPush(this.additiveTransforms, entry);
 }
 
-@addMethod(AnimatedComponent)
+@addMethod(Entity)
 public func RemoveAdditiveTransform(name: CName) {
     let i = ArraySize(this.additiveTransforms) - 1;
     while i >= 0 {
@@ -78,7 +55,7 @@ public func RemoveAdditiveTransform(name: CName) {
     }
 }
 
-@addMethod(AnimatedComponent)
+@addMethod(Entity)
 public func RemoveAdditiveTransforms(name: CName) {
     let i = ArraySize(this.additiveTransforms) - 1;
     while i >= 0 {
@@ -89,11 +66,20 @@ public func RemoveAdditiveTransforms(name: CName) {
     }
 }
 
-@addMethod(AnimatedComponent)
+@addMethod(Entity)
 public func ClearAdditiveTransforms() {
     ArrayClear(this.additiveTransforms);
 }
 
+
+@addMethod(AnimatedComponent)
+public native func GetRig() -> ref<animRig>;
+
+@addMethod(AnimatedComponent)
+public native func ForceReferencePose(force: Bool);
+
+
+@if(ModuleExists("Codeware"))
 
 @addField(entISkinTargetComponent)
 public let visualScale: Vector3;
