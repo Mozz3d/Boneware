@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Core/MacroUtils.hpp>
+#include <Core/HookingUtils.hpp>
 #include <Core/Plugin.hpp>
 
 template<typename T>
@@ -247,6 +248,20 @@ struct NativeExpansion;
         FuncInfo::HasHook = Plugin::RegisterHook(FuncInfo::Address, pmf_cast<void*>(&ExType::_name)); \
         return FuncInfo::HasHook; \
     }()
+
+using NativeMidFuncContext = MidHooking::MidContext;
+#define NATIVE_MID_DETOUR_FN(_name, _offset, _detour) \
+    inline static const bool _detour##_mid_hook_registered = []() { \
+        static_assert( \
+            std::is_same_v<decltype(&ExType::_detour), void(*)(NativeMidFuncContext&)>, \
+            "Mid detour '" #_detour "' must be: static void " #_detour "(NativeMidFuncContext&)" \
+        ); \
+        using FuncInfo = NativeInfo<NativeType>::_name; \
+        return ::MidHooking::InstallMidDetour( \
+            FuncInfo::Address + (_offset), \
+            reinterpret_cast<void*>(&ExType::_detour)); \
+    }()
+
 
 
 
