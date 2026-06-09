@@ -11,7 +11,10 @@ struct ISkinTargetComponentEx : RED4ext::ent::ISkinTargetComponent
 		RED4ext::Vector3 visualScale{ 1.f, 1.f, 1.f };
 		if (auto* scriptProp = GetType()->GetProperty("visualScale"))
 		{
-			visualScale = *scriptProp->GetValuePtr<RED4ext::Vector3>(this);
+			if (auto* value = scriptProp->GetValuePtr<RED4ext::Vector3>(this))
+			{
+				visualScale = *value;
+			}
 		}
 
 		ApplySkinningInfo info {

@@ -68,7 +68,7 @@ public func AddAdditiveRotation(name: CName, rotation: script_ref<Quaternion>) {
 
 @addMethod(AnimatedComponent)
 public func RemoveAdditiveTransform(name: CName) {
-    let i = ArraySize(this.additiveTransforms);
+    let i = ArraySize(this.additiveTransforms) - 1;
     while i >= 0 {
         if Equals(this.additiveTransforms[i].name, name) {
             ArrayErase(this.additiveTransforms, i);
@@ -80,7 +80,7 @@ public func RemoveAdditiveTransform(name: CName) {
 
 @addMethod(AnimatedComponent)
 public func RemoveAdditiveTransforms(name: CName) {
-    let i = ArraySize(this.additiveTransforms);
+    let i = ArraySize(this.additiveTransforms) - 1;
     while i >= 0 {
         if Equals(this.additiveTransforms[i].name, name) {
             ArrayErase(this.additiveTransforms, i);
