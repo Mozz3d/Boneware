@@ -8,16 +8,33 @@ struct AnimatedObjectEx : RED4ext::anim::AnimatedObject
 {
 	static void ApplyScriptedAdditivetransforms(NativeMidFuncContext& ctx)
 	{
-		auto* animatedObject = ctx.RBX<RED4ext::anim::AnimatedObject*>();
-		auto* updateCtx = ctx.RSI<Native::anim::AnimatedObjectUpdateContext*>();
-		auto* metaPose = ctx.R13<Native::anim::MetaPose*>();
+		auto* animatedObj = ctx.RBX<RED4ext::anim::AnimatedObject*>();
+		auto* updateCtx   = ctx.RSI<Native::anim::AnimatedObjectUpdateContext*>();
+		auto* metaPose	  = ctx.R13<Native::anim::MetaPose*>();
 
 		auto* entity = updateCtx->entity;
+
+		if (auto* scriptProp = entity->GetType()->GetProperty("metaRigRef"))
+		{
+			if (auto* metaRigRef = scriptProp->GetValuePtr<MetaRigScriptRef>(entity))
+			{
+				metaRigRef->ptr = NATIVE_GET(animatedObj,m_metaRigRef).m_metaRig;
+			}
+		}
+
+		if (auto* scriptProp = entity->GetType()->GetProperty("metaPoseRef"))
+		{
+			if (auto* metaPoseRef = scriptProp->GetValuePtr<MetaPoseScriptRef>(entity))
+			{
+				metaPoseRef->ptr = NATIVE_GET(animatedObj,m_metaPose);
+			}
+		}
+
 		if (auto* scriptProp = entity->GetType()->GetProperty("additiveTransforms"))
 		{
 			if (auto* entries = scriptProp->GetValuePtr<RED4ext::DynArray<AdditiveTransformEntry>>(entity))
 			{
-				RED4ext::DynArray<RED4ext::CName>& metaBoneNames = NATIVE_GET(animatedObject,m_metaRigRef).m_metaRig->boneNames;
+				RED4ext::DynArray<RED4ext::CName>& metaBoneNames = NATIVE_GET(animatedObj,m_metaRigRef).m_metaRig->boneNames;
 				RED4ext::DynArray<RED4ext::QsTransform>& poseTransforms = metaPose->m_transforms;
 				for (const auto& entry : *entries)
 				{

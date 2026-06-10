@@ -45,7 +45,9 @@ namespace MidHooking
         0x48, 0x83, 0xE4, 0xF0,                               // and    rsp, -16
         0x48, 0x83, 0xEC, 0x20,                               // sub    rsp, 0x20
         0x48, 0xB8,                                           // movabs rax, imm64
+
         0xCC, 0xCC, 0xCC, 0xCC, 0xCC, 0xCC, 0xCC, 0xCC,       // Detour ptr
+
         0xFF, 0xD0,                                           // call   rax
         0x48, 0x89, 0xDC,                                     // mov    rsp, rbx
 

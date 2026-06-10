@@ -6,5 +6,4 @@
 #include <Plugin/anim/MetaRig.hpp>
 
 #include <Plugin/ent/AnimatedComponentEx.hpp>
-#include <Plugin/ent/EntityEx.hpp>
 #include <Plugin/ent/ISkinTargetComponentEx.hpp>
