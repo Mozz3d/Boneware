@@ -1,5 +1,5 @@
 
-public native struct AdditiveTransformEntry {
+public native struct BoneTransformEntry {
     public native let name: CName;
     public native let transform: QsTransform;
 }

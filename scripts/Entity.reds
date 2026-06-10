@@ -5,7 +5,7 @@ public let metaRigRef: MetaRigRef;
 public let metaPoseRef: MetaPoseRef;
 
 @addField(Entity)
-public let additiveTransforms: array<AdditiveTransformEntry>;
+public let poseAdditiveTransforms: array<BoneTransformEntry>;
 
 @addMethod(Entity)
 public func GetMetaRig() -> MetaRigRef {
@@ -18,46 +18,56 @@ public func GetMetaPose() -> MetaPoseRef {
 }
 
 @addMethod(Entity)
-public func AddBoneAdditiveTransform(name: CName, transform: script_ref<QsTransform>) {
-    let entry = new AdditiveTransformEntry();
-    entry.name = name;
-    entry.transform = Deref(transform);
-    ArrayPush(this.additiveTransforms, entry);
+public func GetBoneNames() -> array<CName> {
+    return this.metaRigRef.GetBoneNames();
 }
 
 @addMethod(Entity)
-public func AddBoneAdditiveTranslation(name: CName, translation: script_ref<Vector4>) {
-    let entry = new AdditiveTransformEntry();
+public func GetPoseTransforms() -> array<QsTransform> {
+    return this.metaPoseRef.GetTransforms();
+}
+
+@addMethod(Entity)
+public func AddPoseAdditiveTransform(name: CName, transform: QsTransform) {
+    let entry = new BoneTransformEntry();
+    entry.name = name;
+    entry.transform = transform;
+    ArrayPush(this.poseAdditiveTransforms, entry);
+}
+
+@addMethod(Entity)
+public func AddPoseAdditiveTranslation(name: CName, translation: Vector4) {
+    let entry = new BoneTransformEntry();
     entry.name = name;
     entry.transform = new QsTransform();
-    entry.transform.Translation = Deref(translation);
-    ArrayPush(this.additiveTransforms, entry);
+    entry.transform.Translation = translation;
+    ArrayPush(this.poseAdditiveTransforms, entry);
 }
 
 @addMethod(Entity)
-public func AddBoneAdditiveRotation(name: CName, rotation: script_ref<Quaternion>) {
-    let entry = new AdditiveTransformEntry();
+public func AddPoseAdditiveRotation(name: CName, rotation: Quaternion) {
+    let entry = new BoneTransformEntry();
     entry.name = name;
     entry.transform = new QsTransform();
     entry.transform.Rotation = Deref(rotation);
-    ArrayPush(this.additiveTransforms, entry);
+    ArrayPush(this.poseAdditiveTransforms, entry);
 }
 
 @addMethod(Entity)
-public func AddBoneAdditiveScale(name: CName, scale: Vector3) {
-    let entry = new AdditiveTransformEntry();
+public func AddPoseAdditiveScale(name: CName, scale: Vector3) {
+    let entry = new BoneTransformEntry();
     entry.name = name;
     entry.transform = new QsTransform();
     entry.transform.Scale = Vector4.Vector3To4(scale);
-    ArrayPush(this.additiveTransforms, entry);
+    ArrayPush(this.poseAdditiveTransforms, entry);
 }
 
 @addMethod(Entity)
-public func RemoveBoneAdditiveTransform(name: CName) {
-    let i = ArraySize(this.additiveTransforms) - 1;
+public func RemovePoseAdditiveTransform(name: CName) {
+    let i = ArraySize(this.poseAdditiveTransforms) - 1;
     while i >= 0 {
-        if Equals(this.additiveTransforms[i].name, name) {
-            ArrayErase(this.additiveTransforms, i);
+        if Equals(this.poseAdditiveTransforms[i].name, name) {
+            ArrayErase(this.poseAdditiveTransforms, i);
             return;
         }
         i -= 1;
@@ -65,17 +75,17 @@ public func RemoveBoneAdditiveTransform(name: CName) {
 }
 
 @addMethod(Entity)
-public func RemoveBoneAdditiveTransforms(name: CName) {
-    let i = ArraySize(this.additiveTransforms) - 1;
+public func RemovePoseAdditiveTransforms(name: CName) {
+    let i = ArraySize(this.poseAdditiveTransforms) - 1;
     while i >= 0 {
-        if Equals(this.additiveTransforms[i].name, name) {
-            ArrayErase(this.additiveTransforms, i);
+        if Equals(this.poseAdditiveTransforms[i].name, name) {
+            ArrayErase(this.poseAdditiveTransforms, i);
         }
         i -= 1;
     }
 }
 
 @addMethod(Entity)
-public func ClearBoneAdditiveTransforms() {
-    ArrayClear(this.additiveTransforms);
+public func ClearPoseAdditiveTransforms() {
+    ArrayClear(this.poseAdditiveTransforms);
 }

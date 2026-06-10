@@ -11,13 +11,14 @@
 #include <RED4ext.hpp>
 #include <RedLib.hpp>
 
+#include <RTTITypes.hpp>
+#include <Relocation.hpp>
+#include <Callback.hpp>
+
 #include <Core/MacroUtils.hpp>
 #include <Core/Plugin.hpp>
 #include <Core/PtrUtils.hpp>
 #include <Core/NativeInfoUtils.hpp>
-
-#include <Relocation.hpp>
-#include <Callback.hpp>
 
 #include <Containers/Span.hpp>
 
