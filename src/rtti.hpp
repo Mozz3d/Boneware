@@ -1,8 +1,9 @@
 #pragma once
 
-#include <Scripting/Extensions/anim/AnimationExt.hpp>
-#include <Scripting/Extensions/anim/AnimSetupEntryExt.hpp>
+#include <Plugin/anim/AnimationEx.hpp>
+#include <Plugin/anim/AnimSetupEntryEx.hpp>
+#include <Plugin/anim/MetaPose.hpp>
+#include <Plugin/anim/MetaRig.hpp>
 
-#include <Scripting/Extensions/ent/AnimatedComponentExt.hpp>
-#include <Scripting/Extensions/ent/EntityExt.hpp>
-#include <Scripting/Extensions/ent/ISkinTargetComponentExt.hpp>
+#include <Plugin/ent/AnimatedComponentEx.hpp>
+#include <Plugin/ent/ISkinTargetComponentEx.hpp>

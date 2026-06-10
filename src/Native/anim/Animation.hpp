@@ -5,5 +5,5 @@
 
 NATIVE_INFO(RED4ext::anim::Animation)
 {
-	NATIVE_MEMBER_FN(void(float, Native::anim::Pose&) const, Sample, 1623265017)
+	NATIVE_MEMBER_FN(void, Sample,(float, Native::anim::Pose&) const, 1623265017);
 };

@@ -3,9 +3,9 @@
 #include <Native/anim/Animation.hpp>
 #include <RED4ext/Scripting/Natives/animAnimationBufferCompressed.hpp>
 
-NATIVE_INFO_ALIAS(AnimationExt, RED4ext::anim::Animation)
+NATIVE_INFO_ALIAS(AnimationEx, RED4ext::anim::Animation);
 
-struct AnimationExt : RED4ext::anim::Animation
+struct AnimationEx : RED4ext::anim::Animation
 {
 	const RED4ext::Handle<RED4ext::anim::AnimationBufferCompressed>& GetAnimBufferCompressed()
 	{
@@ -39,7 +39,7 @@ struct AnimationExt : RED4ext::anim::Animation
 	}
 };
 
-RTTI_EXPAND_CLASS(RED4ext::anim::Animation, AnimationExt,
+RTTI_EXPAND_CLASS(RED4ext::anim::Animation, AnimationEx,
 	RTTI_METHOD(SampleTransforms);
 	RTTI_METHOD(SampleTracks);
 );
