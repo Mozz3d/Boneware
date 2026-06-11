@@ -7,6 +7,12 @@ public let metaPoseRef: MetaPoseRef;
 @addField(Entity)
 public let poseAdditiveTransforms: array<BoneTransformEntry>;
 
+@addField(Entity)
+public let poseOverrideTransforms: array<BoneTransformEntry>;
+
+@addField(Entity)
+public let poseTrackOverrides: array<TrackValueEntry>;
+
 @addMethod(Entity)
 public func GetMetaRig() -> MetaRigRef {
     return this.metaRigRef;
@@ -19,12 +25,55 @@ public func GetMetaPose() -> MetaPoseRef {
 
 @addMethod(Entity)
 public func GetBoneNames() -> array<CName> {
-    return this.metaRigRef.GetBoneNames();
+    return MetaRigRef.GetBoneNames(this.metaRigRef);
+}
+
+@addMethod(Entity)
+public func GetTrackNames() -> array<CName> {
+    return MetaRigRef.GetTrackNames(this.metaRigRef);
 }
 
 @addMethod(Entity)
 public func GetPoseTransforms() -> array<QsTransform> {
-    return this.metaPoseRef.GetTransforms();
+    return MetaPoseRef.GetTransforms(this.metaPoseRef);
+}
+
+@addMethod(Entity)
+public func GetPoseTracks() -> array<Float> {
+    return MetaPoseRef.GetTracks(this.metaPoseRef);
+}
+
+@addMethod(Entity)
+public func SetPoseOverrideTransform(name: CName, transform: QsTransform) {
+    let i = 0;
+    while i < ArraySize(this.poseOverrideTransforms) {
+        if Equals(this.poseOverrideTransforms[i].name, name) {
+            this.poseOverrideTransforms[i].transform = transform;
+            return;
+        }
+        i += 1;
+    }
+    let entry = new BoneTransformEntry();
+    entry.name = name;
+    entry.transform = transform;
+    ArrayPush(this.poseOverrideTransforms, entry);
+}
+
+@addMethod(Entity)
+public func RemovePoseOverrideTransform(name: CName) {
+    let i = 0;
+    while i < ArraySize(this.poseOverrideTransforms) {
+        if Equals(this.poseOverrideTransforms[i].name, name) {
+            ArrayErase(this.poseOverrideTransforms, i);
+            return;
+        }
+        i += 1;
+    }
+}
+
+@addMethod(Entity)
+public func ClearPoseOverrideTransforms() {
+    ArrayClear(this.poseOverrideTransforms);
 }
 
 @addMethod(Entity)
@@ -49,7 +98,7 @@ public func AddPoseAdditiveRotation(name: CName, rotation: Quaternion) {
     let entry = new BoneTransformEntry();
     entry.name = name;
     entry.transform = new QsTransform();
-    entry.transform.Rotation = Deref(rotation);
+    entry.transform.Rotation = rotation;
     ArrayPush(this.poseAdditiveTransforms, entry);
 }
 
