@@ -36,7 +36,10 @@ struct MetaPoseScriptRef
 
 	RED4ext::QsTransform GetTransform(uint32_t aBoneIdx) const
 	{
-		if (ptr) return ptr->m_transforms[aBoneIdx];
+		if (ptr && aBoneIdx < ptr->m_transforms.Size())
+		{
+			return ptr->m_transforms[aBoneIdx];
+		}
 		return {};
 	}
 
@@ -48,7 +51,10 @@ struct MetaPoseScriptRef
 
 	float GetTrack(uint32_t aTrackIndex) const
 	{
-		if (ptr) return ptr->m_tracks[aTrackIndex];
+		if (ptr && aTrackIndex < ptr->m_tracks.Size())
+		{
+			return ptr->m_tracks[aTrackIndex];
+		}
 		return {};
 	}
 

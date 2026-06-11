@@ -1,4 +1,7 @@
 @addField(Entity)
+public let shouldAnimUpdate: Bool = true;
+
+@addField(Entity)
 public let metaRigRef: MetaRigRef;
 
 @addField(Entity)
@@ -12,6 +15,16 @@ public let poseOverrideTransforms: array<BoneTransformEntry>;
 
 @addField(Entity)
 public let poseTrackOverrides: array<TrackValueEntry>;
+
+@addMethod(Entity)
+public func SetShouldAnimUpdate(shouldUpdate: Bool) {
+    this.shouldAnimUpdate = shouldUpdate;
+}
+
+@addMethod(Entity)
+public func ToggleShouldAnimUpdate() {
+    this.shouldAnimUpdate = !this.shouldAnimUpdate;
+}
 
 @addMethod(Entity)
 public func GetMetaRig() -> MetaRigRef {
