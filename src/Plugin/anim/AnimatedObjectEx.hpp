@@ -32,23 +32,47 @@ struct AnimatedObjectEx : RED4ext::anim::AnimatedObject
 			}
 		}
 
+		if (auto* scriptProp = entityClass->GetProperty("poseOverrideTransforms"))
+		{
+			if (auto* entries = scriptProp->GetValuePtr<RED4ext::DynArray<BoneTransformEntry>>(entity))
+			{
+				for (const auto& entry : *entries)
+				{
+					int32_t boneIdx = Lib::ArrayUtils::GetValueIndex(metaRig->boneNames, entry.name);
+					if (boneIdx < 0 || boneIdx >= metaPose->m_numBones) continue;
+
+					metaPose->m_transforms[boneIdx] = entry.transform;
+				}
+			}
+		}
+
 		if (auto* scriptProp = entityClass->GetProperty("poseAdditiveTransforms"))
 		{
 			if (auto* entries = scriptProp->GetValuePtr<RED4ext::DynArray<BoneTransformEntry>>(entity))
 			{
-				RED4ext::DynArray<RED4ext::CName>& metaBoneNames = metaRig->boneNames;
-				RED4ext::DynArray<RED4ext::QsTransform>& poseTransforms = metaPose->m_transforms;
 				for (const auto& entry : *entries)
 				{
-					auto it = metaBoneNames.Find(entry.name);
-					if (it == metaBoneNames.End()) continue;
-					uint32_t index = static_cast<uint32_t>(std::distance(metaBoneNames.Begin(), it));
-					if (index >= metaPose->m_numBones) continue;
+					int32_t boneIdx = Lib::ArrayUtils::GetValueIndex(metaRig->boneNames, entry.name);
+					if (boneIdx < 0 || boneIdx >= metaPose->m_numBones) continue;
 
-					RED4ext::QsTransform& poseTransform = poseTransforms[index];
+					RED4ext::QsTransform& poseTransform = metaPose->m_transforms[boneIdx];
 					poseTransform.Translation += entry.transform.Translation;
 					poseTransform.Rotation	  *= entry.transform.Rotation;
 					poseTransform.Scale		  *= entry.transform.Scale;
+				}
+			}
+		}
+
+		if (auto* scriptProp = entityClass->GetProperty("poseTrackOverrides"))
+		{
+			if (auto* entries = scriptProp->GetValuePtr<RED4ext::DynArray<TrackValueEntry>>(entity))
+			{
+				for (const auto& entry : *entries)
+				{
+					int32_t trackIdx = Lib::ArrayUtils::GetValueIndex(metaRig->trackNames, entry.name);
+					if (trackIdx < 0 || trackIdx >= metaPose->m_numBones) continue;
+
+					metaPose->m_tracks[trackIdx] = entry.value;
 				}
 			}
 		}

@@ -29,5 +29,7 @@
 #include <Scripting/Natives/Vector4.hpp>
 #include <Scripting/Natives/Generated/QsTransform.hpp>
 #include <Scripting/Natives/Generated/WorldTransform.hpp>
+
 #include <Lib/VectorMath.hpp>
 #include <Lib/ScriptedUtils.hpp>
+#include <Lib/ArrayUtils.hpp>
