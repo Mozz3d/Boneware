@@ -6,6 +6,21 @@
 
 struct AnimatedObjectEx : RED4ext::anim::AnimatedObject
 {
+	void Update_Detour(Native::anim::AnimatedObjectUpdateContext& aUpdateCtx)
+	{
+		RED4ext::ent::Entity* entity = aUpdateCtx.entity;
+		RED4ext::CClass* entityClass = entity->GetType();
+		if (auto* scriptProp = entityClass->GetProperty("shouldAnimUpdate"))
+		{
+			if (auto* shouldUpdate = scriptProp->GetValuePtr<bool>(entity))
+			{
+				if (*shouldUpdate == false) return;
+			}
+		}
+
+		NATIVE_CALL_ORIGINAL(this,Update(aUpdateCtx));
+	}
+
 	static void UpdateEntityScriptedProperties(NativeMidFuncContext& ctx)
 	{
 		auto* animatedObj = ctx.RBX<RED4ext::anim::AnimatedObject*>();
@@ -39,7 +54,7 @@ struct AnimatedObjectEx : RED4ext::anim::AnimatedObject
 				for (const auto& entry : *entries)
 				{
 					int32_t boneIdx = Lib::ArrayUtils::GetValueIndex(metaRig->boneNames, entry.name);
-					if (boneIdx < 0 || boneIdx >= metaPose->m_numBones) continue;
+					if (boneIdx < 0 || boneIdx >= metaPose->m_transforms.Size()) continue;
 
 					metaPose->m_transforms[boneIdx] = entry.transform;
 				}
@@ -53,7 +68,7 @@ struct AnimatedObjectEx : RED4ext::anim::AnimatedObject
 				for (const auto& entry : *entries)
 				{
 					int32_t boneIdx = Lib::ArrayUtils::GetValueIndex(metaRig->boneNames, entry.name);
-					if (boneIdx < 0 || boneIdx >= metaPose->m_numBones) continue;
+					if (boneIdx < 0 || boneIdx >= metaPose->m_transforms.Size()) continue;
 
 					RED4ext::QsTransform& poseTransform = metaPose->m_transforms[boneIdx];
 					poseTransform.Translation += entry.transform.Translation;
@@ -70,7 +85,7 @@ struct AnimatedObjectEx : RED4ext::anim::AnimatedObject
 				for (const auto& entry : *entries)
 				{
 					int32_t trackIdx = Lib::ArrayUtils::GetValueIndex(metaRig->trackNames, entry.name);
-					if (trackIdx < 0 || trackIdx >= metaPose->m_numBones) continue;
+					if (trackIdx < 0 || trackIdx >= metaPose->m_tracks.Size()) continue;
 
 					metaPose->m_tracks[trackIdx] = entry.value;
 				}
@@ -81,5 +96,6 @@ struct AnimatedObjectEx : RED4ext::anim::AnimatedObject
 
 NATIVE_EXPAND(RED4ext::anim::AnimatedObject, AnimatedObjectEx)
 {
+	NATIVE_DETOUR_MEMBER_FN(Update, Update_Detour);
 	NATIVE_MID_DETOUR_FN(Update, 0x46E, UpdateEntityScriptedProperties);
 };
