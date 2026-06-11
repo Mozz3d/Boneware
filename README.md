@@ -1,11 +1,35 @@
 ```lua
-if ImGui.Button("Log Current Pose") then
+if ImGui.Button("Log Current Pose Transforms") then
     player = Game.GetPlayer()
-    rootComponent = player:FindComponentByName('root')
-    poseTransforms = rootComponent:GetCurrentPoseTransforms()
-    for i, transform in ipairs(poseTransforms) do 
-        print(i, GameDump(transform))
+    for i, transform in ipairs(player:GetPoseTransforms()) do 
+        print(player:GetBoneNames()[i], GameDump(transform))
     end
+end
+
+if ImGui.Button("Log Current Pose Tracks") then
+    player = Game.GetPlayer()
+    for i, track in ipairs(player:GetPoseTracks()) do 
+        print(player:GetBoneNames()[i], track)
+    end
+end
+
+if ImGui.Button("Toggle Animation Updating") then
+    player = Game.GetPlayer()
+    player:ToggleShouldAnimUpdate()
+end
+
+if ImGui.Button("Set Pose Override Transform") then
+    player = Game.GetPlayer()
+    local transform = QsTrasnform.new()
+    transform.Translation = ToVector4{x=1.5, y=1.5, z=1.5, w=1}
+    player:SetPoseOverrideTransform("l_thigh_0_JNT", transform)
+end
+
+if ImGui.Button("Add Pose Additive Transform") then
+    player = Game.GetPlayer()
+    local transform = QsTrasnform.new()
+    transform.Scale = ToVector4{x=1.1, y=1.1, z=1.1, w=1}
+    player:AddPoseAdditiveTransform("l_thigh_0_JNT", transform)
 end
 
 if ImGui.Button("Sample Animation") then
