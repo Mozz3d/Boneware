@@ -14,7 +14,10 @@ struct MetaRigScriptRef
 
 	RED4ext::QsTransform GetBoneTransform(uint32_t aBoneIndex) const
 	{
-		if (ptr) return ptr->boneTransforms[aBoneIndex];
+		if (ptr && aBoneIndex < ptr->boneTransforms.Size())
+		{
+			return ptr->boneTransforms[aBoneIndex];
+		}
 		return {};
 	}
 
@@ -26,7 +29,10 @@ struct MetaRigScriptRef
 
 	RED4ext::CName GetBoneName(int32_t aBoneIndex) const
 	{
-		if (ptr) return ptr->boneNames[aBoneIndex];
+		if (ptr && aBoneIndex < ptr->boneNames.Size())
+		{
+			return ptr->boneNames[aBoneIndex];
+		}
 		return {};
 	}
 
@@ -42,10 +48,13 @@ struct MetaRigScriptRef
 		return {};
 	}
 
-	RED4ext::DynArray<float> GetTrackValue(uint32_t aTrackIndex) const
+	float GetTrackValue(uint32_t aTrackIndex) const
 	{
-		if (ptr) return ptr->referenceTracks[aTrackIndex];
-		return {};
+		if (ptr && aTrackIndex < ptr->referenceTracks.Size())
+		{
+			return ptr->referenceTracks[aTrackIndex];
+		}
+		return 0;
 	}
 
 	RED4ext::DynArray<RED4ext::CName> GetTrackNames() const
@@ -56,7 +65,10 @@ struct MetaRigScriptRef
 
 	RED4ext::CName GetTrackName(int32_t aTrackIndex) const
 	{
-		if (ptr) return ptr->trackNames[aTrackIndex];
+		if (ptr && aTrackIndex < ptr->trackNames.Size())
+		{
+			return ptr->trackNames[aTrackIndex];
+		}
 		return {};
 	}
 
