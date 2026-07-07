@@ -21,6 +21,12 @@ struct MetaRigScriptRef
 		return {};
 	}
 
+	RED4ext::DynArray<int16_t> GetBoneParentIndices() const
+	{
+		if (ptr) return ptr->parentIndeces;
+		return {};
+	}
+
 	RED4ext::DynArray<RED4ext::CName> GetBoneNames() const
 	{
 		if (ptr) return ptr->boneNames;
@@ -84,6 +90,7 @@ struct MetaRigScriptRef
 RTTI_DEFINE_CLASS(MetaRigScriptRef, "MetaRigRef",
 	RTTI_METHOD(GetBoneTransforms);
 	RTTI_METHOD(GetBoneTransform);
+	RTTI_METHOD(GetBoneParentIndices);
 	RTTI_METHOD(GetBoneNames);
 	RTTI_METHOD(GetBoneName);
 	RTTI_METHOD(GetBoneIndex);
