@@ -56,13 +56,26 @@ struct SampleOutput
 };
 }
 
-NATIVE_INFO(RED4ext::anim::AnimGraph)
+NATIVE_INFO(r4e::anim::AnimGraph)
 {
-	NATIVE_MEMBER_FN(void, Sample,(Native::anim::AnimGraphSampleContext&) const, 2331448661);
-	NATIVE_MEMBER_FN(void, ResetFeatures,(Native::anim::AnimInstanceBuffer&, bool), 248715065);
-	NATIVE_MEMBER_FN(bool, SetInstanceBoolVar,(Native::anim::AnimInstanceBuffer&, RED4ext::CName, bool), 564992717);
-	NATIVE_MEMBER_FN(bool, SetInstanceIntVar,(Native::anim::AnimInstanceBuffer&, RED4ext::CName, int), 110697064);
-	NATIVE_MEMBER_FN(bool, SetInstanceFloatVar,(Native::anim::AnimInstanceBuffer&, RED4ext::CName, float), 111680109);
+	NATIVE_MEMBER_FUNC(
+	void ,Sample,(ntv::anim::AnimGraphSampleContext&) const,                       2331448661);
 
-	NATIVE_FIELD(uint32_t, m_nextNodeID, 0x118);
+	NATIVE_MEMBER_FUNC(
+	void ,ResetFeatures,(ntv::anim::AnimInstanceBuffer&, bool),                    248715065);
+
+	NATIVE_MEMBER_FUNC(
+	bool ,SetInstanceBoolVar,(ntv::anim::AnimInstanceBuffer&, r4e::CName, bool),   564992717);
+
+	NATIVE_MEMBER_FUNC(
+	bool ,SetInstanceIntVar,(ntv::anim::AnimInstanceBuffer&, r4e::CName, int),     110697064);
+
+	NATIVE_MEMBER_FUNC(
+	bool ,SetInstanceFloatVar,(ntv::anim::AnimInstanceBuffer&, r4e::CName, float), 111680109);
+
+	NATIVE_DATA_MEMBER(
+	bool ,unkF0, 0xF0);
+
+	NATIVE_DATA_MEMBER(
+	uint32_t ,m_nextNodeID, 0x118);
 };

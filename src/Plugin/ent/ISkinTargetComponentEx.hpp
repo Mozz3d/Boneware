@@ -6,7 +6,7 @@ struct ISkinTargetComponentEx : RED4ext::ent::ISkinTargetComponent
 {
 	void OnTransformUpdated(RED4ext::Box& aOutBounds)
 	{
-		aOutBounds = NATIVE_CALL(worldTransform,TransformBox(NATIVE_GET(this,m_activeSkinBounds)));
+		aOutBounds = NTV_CALL(worldTransform,TransformBox(NTV_GET(this,m_activeSkinBounds)));
 
 		RED4ext::Vector3 visualScale{ 1.f, 1.f, 1.f };
 		if (auto* scriptProp = GetType()->GetProperty("visualScale"))
@@ -20,17 +20,17 @@ struct ISkinTargetComponentEx : RED4ext::ent::ISkinTargetComponent
 		ApplySkinningInfo info {
 			{worldTransform, visualScale},
 			aOutBounds,
-			&NATIVE_GET(this,m_skinningBuffer),
-			&NATIVE_GET(this,m_trackBuffer),
-			NATIVE_GET(this,m_skinningBuffer) ? NATIVE_GET(this,m_skinningBuffer)->GetMatrixCount() : 0
+			&NTV_GET(this,m_skinningBuffer),
+			&NTV_GET(this,m_trackBuffer),
+			NTV_GET(this,m_skinningBuffer) ? NTV_GET(this,m_skinningBuffer)->GetMatrixCount() : 0
 		};
-		NATIVE_CALL(this,OnApplySkinningAndTransform(&info));
+		NTV_CALL(this,OnApplySkinningAndTransform(&info));
 	}
 };
 
 NATIVE_EXPAND(RED4ext::ent::ISkinTargetComponent, ISkinTargetComponentEx)
 {
-	NATIVE_REPLACE_MEMBER_FN(OnTransformUpdated);
+	NATIVE_REPLACE_MEMBER_FUNC(OnTransformUpdated);
 };
 
 RTTI_EXPAND_CLASS(RED4ext::ent::ISkinTargetComponent,
