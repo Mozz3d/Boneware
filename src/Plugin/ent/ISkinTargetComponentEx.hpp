@@ -6,7 +6,8 @@ struct ISkinTargetComponentEx : RED4ext::ent::ISkinTargetComponent
 {
 	void OnTransformUpdated(RED4ext::Box& aOutBounds)
 	{
-		aOutBounds = NTV_CALL(worldTransform,TransformBox(NTV_GET(this,m_activeSkinBounds)));
+		aOutBounds = NTV_CALL(
+					 worldTransform,TransformBox(NTV_GET(this,m_activeSkinBounds)));
 
 		RED4ext::Vector3 visualScale{ 1.f, 1.f, 1.f };
 		if (auto* scriptProp = GetType()->GetProperty("visualScale"))
@@ -24,7 +25,8 @@ struct ISkinTargetComponentEx : RED4ext::ent::ISkinTargetComponent
 			&NTV_GET(this,m_trackBuffer),
 			NTV_GET(this,m_skinningBuffer) ? NTV_GET(this,m_skinningBuffer)->GetMatrixCount() : 0
 		};
-		NTV_CALL(this,OnApplySkinningAndTransform(&info));
+		NTV_CALL(
+		this,OnApplySkinningAndTransform(&info));
 	}
 };
 
