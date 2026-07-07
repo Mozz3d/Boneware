@@ -14,7 +14,7 @@ namespace Native::anim
 {
 struct AnimatedObjectPartUpdateContext
 {
-	r4e::QsTransform* unk00;           // 00
+	r4e::QsTransform* deltaTransform;  // 00
 	r4e::QsTransform* unk08;           // 08
 	r4e::QsTransform* partToParent;    // 10
 	r4e::QsTransform* partToRoot;      // 18
