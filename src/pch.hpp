@@ -32,6 +32,7 @@ namespace r4e = RED4ext;
 #include <Scripting/Natives/Generated/QsTransform.hpp>
 #include <Scripting/Natives/Generated/WorldTransform.hpp>
 
-#include <Lib/Math.hpp>
+#include <Lib/QuaternionUtils.hpp>
+#include <Lib/QsTransformUtils.hpp>
 #include <Lib/ScriptedUtils.hpp>
 #include <Lib/ArrayUtils.hpp>

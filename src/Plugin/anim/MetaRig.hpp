@@ -44,7 +44,7 @@ struct MetaRigScriptRef
 
 	int32_t GetBoneIndex(const RED4ext::CName aBoneName) const
 	{
-		if (ptr) return Lib::ArrayUtils::GetValueIndex(ptr->boneNames, aBoneName);
+		if (ptr) return Lib::ArrUtils::IndexOf(ptr->boneNames, aBoneName);
 		return -1;
 	}
 
@@ -80,7 +80,7 @@ struct MetaRigScriptRef
 
 	int32_t GetTrackIndex(const RED4ext::CName aTrackName) const
 	{
-		if (ptr) return Lib::ArrayUtils::GetValueIndex(ptr->trackNames, aTrackName);
+		if (ptr) return Lib::ArrUtils::IndexOf(ptr->trackNames, aTrackName);
 		return -1;
 	}
 
