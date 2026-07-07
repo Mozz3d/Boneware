@@ -8,7 +8,7 @@
 #include <Plugin/anim/MetaPose.hpp>
 #include <Plugin/anim/MetaRig.hpp>
 
-#include <Lib/Rig.hpp>
+#include <Lib/RigUtils.hpp>
 
 struct AnimatedObjectEx : RED4ext::anim::AnimatedObject
 {
@@ -167,10 +167,9 @@ struct AnimatedObjectEx : RED4ext::anim::AnimatedObject
 							Lib::QsTransform::SetMulUnsafe(partToRoot, parentPart->localToRoot, partToParent);
 
 							auto normalizedRot = Lib::simd::Normalize4(*std::bit_cast<__m128*>(&partToParent.Rotation));
-
 							r4e::Transform transform = {
 								partToParent.Translation,
-								*reinterpret_cast<r4e::Quaternion*>(&normalizedRot)
+								*std::bit_cast<r4e::Quaternion*>(&normalizedRot)
 							};
 							transform.position.W = 0.f;
 
