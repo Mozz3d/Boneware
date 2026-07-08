@@ -6,13 +6,13 @@ struct MetaRigScriptRef
 {
 	MetaRigScriptRef() = default;
 
-	RED4ext::DynArray<RED4ext::QsTransform> GetBoneTransforms() const
+	r4e::DynArray<r4e::QsTransform> GetBoneTransforms() const
 	{
 		if (ptr) return ptr->boneTransforms;
 		return {};
 	}
 
-	RED4ext::QsTransform GetBoneTransform(uint32_t aBoneIndex) const
+	r4e::QsTransform GetBoneTransform(uint32_t aBoneIndex) const
 	{
 		if (ptr && aBoneIndex < ptr->boneTransforms.Size())
 		{
@@ -21,19 +21,19 @@ struct MetaRigScriptRef
 		return {};
 	}
 
-	RED4ext::DynArray<int16_t> GetBoneParentIndices() const
+	r4e::DynArray<int16_t> GetBoneParentIndices() const
 	{
 		if (ptr) return ptr->parentIndeces;
 		return {};
 	}
 
-	RED4ext::DynArray<RED4ext::CName> GetBoneNames() const
+	r4e::DynArray<r4e::CName> GetBoneNames() const
 	{
 		if (ptr) return ptr->boneNames;
 		return {};
 	}
 
-	RED4ext::CName GetBoneName(int32_t aBoneIndex) const
+	r4e::CName GetBoneName(int32_t aBoneIndex) const
 	{
 		if (ptr && aBoneIndex < ptr->boneNames.Size())
 		{
@@ -42,13 +42,13 @@ struct MetaRigScriptRef
 		return {};
 	}
 
-	int32_t GetBoneIndex(const RED4ext::CName aBoneName) const
+	int32_t GetBoneIndex(const r4e::CName aBoneName) const
 	{
 		if (ptr) return Lib::ArrUtils::IndexOf(ptr->boneNames, aBoneName);
 		return -1;
 	}
 
-	RED4ext::DynArray<float> GetTrackValues() const
+	r4e::DynArray<float> GetTrackValues() const
 	{
 		if (ptr) return ptr->referenceTracks;
 		return {};
@@ -63,13 +63,13 @@ struct MetaRigScriptRef
 		return 0;
 	}
 
-	RED4ext::DynArray<RED4ext::CName> GetTrackNames() const
+	r4e::DynArray<r4e::CName> GetTrackNames() const
 	{
 		if (ptr) return ptr->trackNames;
 		return {};
 	}
 
-	RED4ext::CName GetTrackName(int32_t aTrackIndex) const
+	r4e::CName GetTrackName(int32_t aTrackIndex) const
 	{
 		if (ptr && aTrackIndex < ptr->trackNames.Size())
 		{
@@ -78,13 +78,18 @@ struct MetaRigScriptRef
 		return {};
 	}
 
-	int32_t GetTrackIndex(const RED4ext::CName aTrackName) const
+	int32_t GetTrackIndex(const r4e::CName aTrackName) const
 	{
 		if (ptr) return Lib::ArrUtils::IndexOf(ptr->trackNames, aTrackName);
 		return -1;
 	}
 
-	RED4ext::anim::MetaRig* ptr = nullptr;
+	void Update(const r4e::anim::MetaRig* aPtr)
+	{
+		ptr = const_cast<r4e::anim::MetaRig*>(aPtr);
+	}
+
+	r4e::anim::MetaRig* ptr = nullptr;
 };
 
 RTTI_DEFINE_CLASS(MetaRigScriptRef, "MetaRigRef",
