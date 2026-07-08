@@ -28,26 +28,28 @@ struct AnimatedObjectEx : RED4ext::anim::AnimatedObject
 	}
 
 	void Update(ntv::anim::AnimatedObjectUpdateContext& aUpdateCtx)
-    {
-        if ( IsHierarchyDirty() )
-        {
+	{
+		if ( IsHierarchyDirty() )
+		{
 			NTV_CALL(
 			this,RebuildHierarchy(*aUpdateCtx.m_metaRigBank));
 
-            aUpdateCtx.m_rebuiltHierarchy = true;
+			aUpdateCtx.m_rebuiltHierarchy = true;
 
-            if (aUpdateCtx.m_metaRigHeadIndex >= -1)
-            {
+			if (aUpdateCtx.m_metaRigHeadIndex >= -1)
+			{
 				aUpdateCtx.m_metaRigHeadIndex = 
-					Lib::ArrUtils::IndexOf(NTV_GET(this,m_metaRigRef).m_metaRig->boneNames, r4e::CName{0x351c13d86108cce3}/*Head*/);
-            }
-        }
+					Lib::ArrUtils::IndexOf(NTV_GET(
+										   this,m_metaRigRef).m_metaRig->boneNames, r4e::CName{0x351c13d86108cce3}/*Head*/ );
+			}
+		}
 
 		NTV_CALL(
 		this,UpdateDistanceCategory(aUpdateCtx.m_distanceTimeDelta));
 
 		const r4e::anim::MetaRig& _metaRig = *NTV_GET(
 											  this,m_metaRigRef).m_metaRig;
+
 		ntv::anim::MetaPose& metaPose = *NTV_GET(
 										 this,m_metaPose);
 
@@ -76,10 +78,7 @@ struct AnimatedObjectEx : RED4ext::anim::AnimatedObject
 		uint32_t partIndex = 0;
 		while ( part )
 		{
-			const auto rigPoseLS = Lib::Rig::GetAPoseLS(*part->m_rig);
-
-			NTV_CALL(
-			metaPose,ResetPartTransforms(rigPoseLS, partIndex, _metaRig));
+			metaPose.ResetTransforms(Lib::Rig::GetAPoseLS(*part->m_rig), partIndex, _metaRig);
 
 			part = part->m_child;
 			partIndex++;
@@ -113,55 +112,72 @@ struct AnimatedObjectEx : RED4ext::anim::AnimatedObject
 		partUpdateCtx.unkA8 = aUpdateCtx.unkB8;
 		partUpdateCtx.shouldSampleGraph = aUpdateCtx.m_shouldSampleGraph;
 		partUpdateCtx.entity = aUpdateCtx.m_entity;
+		partUpdateCtx.distanceCategory = distanceCategory;
+		partUpdateCtx.unkC4 = NTV_GET(this,unkA0);
+		partUpdateCtx.unkC8 = NTV_GET(this,unkE8);
+		partUpdateCtx.unkCC = aUpdateCtx.unkEE;
 		partUpdateCtx.unkD0 = aUpdateCtx.unkC0;
 		partUpdateCtx.unkD8 = aUpdateCtx.unkC8;
+		partUpdateCtx.unkE0 = 0;
 		partUpdateCtx.unkE8 = &aUpdateCtx.unkD0;
 		partUpdateCtx.unkF0 = &aUpdateCtx.unkD4;
+		partUpdateCtx.unkF8 = aUpdateCtx.unkD5;
 		partUpdateCtx.unk100 = &NTV_GET(this,unkEC);
 		partUpdateCtx.unk108 = &aUpdateCtx.unkD8;
 		partUpdateCtx.unk110 = &aUpdateCtx.unkE0;
 		partUpdateCtx.unk118 = &aUpdateCtx.unkE4;
 		partUpdateCtx.unk120 = &aUpdateCtx.unkEC;
 
+
+		const bool forceUpdate		 = aUpdateCtx.m_forceUpdate;
+		const bool onlyRootAndFacial = aUpdateCtx.unkED;
+		const bool facialAllowed	 = (NTV_GET(
+										this,unkE0) & 0x20)
+										|| !aUpdateCtx.unkEA
+										|| (NTV_GET(
+											this,unk68) & 1);
+
+		auto& streamingContexts			 = NTV_GET(
+										   this,m_streamingContexts);
+
+		auto& dirtyStreamingContexts	 = NTV_GET(
+										   this,m_dirtyStreamingContexts);
+
+		bool& hasDirtyStreamingContexts	 = NTV_GET(
+										   this,m_hasDirtyStreamingContexts);
+
 		part = rootPart;
 		partIndex = 0;
 		while ( part )
 		{
 			const bool isFacial = part->IsFacial();
-			bool shouldSample   = !aUpdateCtx.unkED || partIndex == 0 || isFacial;
+			bool shouldSample   = !onlyRootAndFacial || partIndex == 0 || isFacial;
 
-			if ( shouldSample && !aUpdateCtx.m_forceUpdate && (isFacial || part->IsDeformation() || part->IsDangle()) )
+			if ( shouldSample && !forceUpdate && (isFacial || part->IsDeformation() || part->IsDangle()) )
 			{
-				uint32_t lod = NTV_CALL(
-							   *part->m_rig,RemapDistanceCategoryToSkeletalLOD(distanceCategory));
-				shouldSample = NTV_CALL(
-							   part,ShouldSample(lod));
+				shouldSample = part->ShouldSample(
+					Lib::Rig::RemapDistanceCategoryToSkeletalLOD(*part->m_rig, distanceCategory) );
 			}
 
 			if (shouldSample)
 			{
-				bool shouldUpdateFacial = !isFacial
-										  || (NTV_GET(
-											  this,unkE0) & 0x20) 
-										  || !aUpdateCtx.unkEA 
-										  || (NTV_GET(
-											  this,unk68) & 1);
+				const bool shouldUpdateFacial = !isFacial || facialAllowed;
 
-				if ( shouldUpdateFacial || aUpdateCtx.m_forceUpdate )
+				if ( shouldUpdateFacial || forceUpdate )
 				{
 					if ( shouldUpdateFacial )
 					{
-						ntv::anim::AnimatedObjectPart* parentPart = part->m_parent;
+						const ntv::anim::AnimatedObjectPart* parentPart = part->m_parent;
 						if ( parentPart
 						  && parentPart->metaRigRootBoneIndex != -1
 						  && part->metaRigRootBoneIndex != -1 
 						)
 						{
-							r4e::QsTransform partMS = NTV_CALL(
-													  metaPose,GetBoneMSTransform(_metaRig, part->metaRigRootBoneIndex));
+							const r4e::QsTransform partMS = NTV_CALL(
+														    metaPose,GetBoneMSTransform(_metaRig, part->metaRigRootBoneIndex));
 
-							r4e::QsTransform parentMS = NTV_CALL(
-														metaPose,GetBoneMSTransform(_metaRig, parentPart->metaRigRootBoneIndex));
+							const r4e::QsTransform parentMS = NTV_CALL(
+															  metaPose,GetBoneMSTransform(_metaRig, parentPart->metaRigRootBoneIndex));
 
 							Lib::QsTransform::SetMulInverseMulUnsafe(partToParent, parentMS, partMS);
 							Lib::QsTransform::SetMulUnsafe(partToRoot, parentPart->localToRoot, partToParent);
@@ -193,7 +209,7 @@ struct AnimatedObjectEx : RED4ext::anim::AnimatedObject
 					}
 
 					void* sharedData = part->unkSharedPtr2590.GetPtr();
-					bool shouldCleanStreaming = sharedData && *OffsetPtr<uint32_t,0xBC>(sharedData) != 0;
+					bool shouldCleanStreamingContexts = sharedData && *OffsetPtr<uint32_t,0xBC>(sharedData) != 0;
 
 					if ( NTV_CALL(
 						 part,UpdateInputs(*part)) )
@@ -201,21 +217,12 @@ struct AnimatedObjectEx : RED4ext::anim::AnimatedObject
 						aUpdateCtx.unkD4 = false;
 					}
 
-					if ( shouldCleanStreaming || NTV_GET(
-												 this,m_hasDirtyStreamingContexts) )
+					if ( shouldCleanStreamingContexts || hasDirtyStreamingContexts )
 					{
 						NTV_CALL(
 						part->m_dataContext,CleanStreamingContexts(
-							r4e::Span(NTV_GET(
-									  this,m_streamingContexts).Data(), 
-									  NTV_GET(
-									  this,m_streamingContexts).Size()
-							),
-							r4e::Span(NTV_GET(
-									  this,m_dirtyStreamingContexts).Data(), 
-									  NTV_GET(
-									  this,m_dirtyStreamingContexts).Size()
-							)
+							r4e::Span(streamingContexts.Data(), streamingContexts.Size()),
+							r4e::Span(dirtyStreamingContexts.Data(), dirtyStreamingContexts.Size())
 						));
 					}
 
@@ -226,19 +233,6 @@ struct AnimatedObjectEx : RED4ext::anim::AnimatedObject
 
 						partUpdateCtx.unk30 = &NTV_GET(
 											   _metaRig,unkStructArray)[partIndex];
-
-						partUpdateCtx.distanceCategory = NTV_GET(
-														 this,m_distanceCategory);
-
-						partUpdateCtx.unkC4 = NTV_GET(
-											  this,unkA0);
-
-						partUpdateCtx.unkC8 = NTV_GET(
-											  this,unkE8);
-
-						partUpdateCtx.unkCC = aUpdateCtx.unkEE;
-						partUpdateCtx.unkE0 = 0;
-						partUpdateCtx.unkF8 = aUpdateCtx.unkD5;
 
 						NTV_CALL(
 						part,Update(partUpdateCtx));
@@ -267,16 +261,12 @@ struct AnimatedObjectEx : RED4ext::anim::AnimatedObject
 			metaPose,CalcMS(_metaRig));
 		}
 
-		if ( NTV_GET(
-			 this,m_hasDirtyStreamingContexts) )
+		if ( hasDirtyStreamingContexts )
 		{
-			NTV_GET(
-			this,m_dirtyStreamingContexts).Clear();
-
-			NTV_GET(
-			this,m_hasDirtyStreamingContexts) = false;
+			dirtyStreamingContexts.Clear();
+			hasDirtyStreamingContexts = false;
 		}
-    }
+	}
 };
 
 NATIVE_EXPAND(r4e::anim::AnimatedObject, AnimatedObjectEx)
