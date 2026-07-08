@@ -13,7 +13,16 @@ NATIVE_INFO(r4e::anim::MetaRig)
 
 	struct UnkStruct 
 	{
-		uint8_t unk00[0x80 - 0x00];
+		struct BoneIndexMapping
+		{
+			uint32_t src;
+			uint32_t dst;
+		};
+
+		uint8_t unk00[0x40 - 0x00];
+		r4e::DynArray<BoneIndexMapping> boneMappings;
+		r4e::DynArray<uint16_t> distanceCategoryBoneMapping;
+		uint8_t unk60[0x80 - 0x60];
 	};
 
 	NATIVE_DATA_MEMBER(

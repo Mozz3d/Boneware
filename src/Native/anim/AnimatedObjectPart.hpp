@@ -75,6 +75,26 @@ struct AnimatedObjectPart
 		return m_rig && m_rig->turningOffUpdateAndSample && m_animGraph && !NTV_GET(m_animGraph,unkF0);
 	}
 
+	inline bool IsAlwaysSample()
+	{
+		return m_animGraph && m_animGraph->hackAlwaysSample;
+	}
+
+	inline bool ShouldSample(uint32_t aDistanceCategory)
+	{
+		if (IsAlwaysSample())
+			return true;
+
+		if (unk25B0)
+			return false;
+
+		if (IsFacial())
+			return aDistanceCategory < 2;
+
+		const int32_t turnOffLOD = m_rig->turnOffLOD;
+		return turnOffLOD < 0 || aDistanceCategory < turnOffLOD;
+	}
+
 	uint8_t unk00[0x08 - 0x00];
 	AnimatedObjectPart* m_child;									   // 08
 	AnimatedObjectPart* m_parent;									   // 10
@@ -100,7 +120,7 @@ struct AnimatedObjectPart
 	r4e::SharedPtr<void> unkSharedPtr2590;
 	uint32_t unk25A0;
 	r4e::ent::AnimatedComponent* component;							   // 25a8
-	uint8_t unk25b0;
+	uint8_t unk25B0;
 	bool m_updateSkipped;											   // 25b1
 	uint8_t unk25b2[0x25b8 - 0x25b2];
 	r4e::DynArray<r4e::CName> unk25b8;
