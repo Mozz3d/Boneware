@@ -19,6 +19,7 @@ public native struct MetaPoseRef {
 public native struct MetaRigRef {
     public static native func GetBoneTransforms(self: script_ref<MetaRigRef>) -> array<QsTransform>
     public static native func GetBoneTransform(self: script_ref<MetaRigRef>, boneIndex: Uint32) -> QsTransform
+    public static native func GetBoneParentIndices(self: script_ref<MetaRigRef>) -> array<Int16>
     public static native func GetBoneNames(self: script_ref<MetaRigRef>) -> array<CName>
     public static native func GetBoneName(self: script_ref<MetaRigRef>, boneIndex: Int32) -> CName
     public static native func GetBoneIndex(self: script_ref<MetaRigRef>, boneName: CName) -> Int32
