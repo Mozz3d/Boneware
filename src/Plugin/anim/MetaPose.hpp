@@ -28,13 +28,13 @@ struct MetaPoseScriptRef
 {
 	MetaPoseScriptRef() = default;
 
-	RED4ext::DynArray<RED4ext::QsTransform> GetTransforms() const
+	r4e::DynArray<r4e::QsTransform> GetTransforms() const
 	{
 		if (ptr) return ptr->m_transforms;
 		return {};
 	}
 
-	RED4ext::QsTransform GetTransform(uint32_t aBoneIdx) const
+	r4e::QsTransform GetTransform(uint32_t aBoneIdx) const
 	{
 		if (ptr && aBoneIdx < ptr->m_transforms.Size())
 		{
@@ -43,7 +43,7 @@ struct MetaPoseScriptRef
 		return {};
 	}
 
-	RED4ext::DynArray<float> GetTracks() const
+	r4e::DynArray<float> GetTracks() const
 	{
 		if (ptr) return ptr->m_tracks;
 		return {};
@@ -58,8 +58,12 @@ struct MetaPoseScriptRef
 		return {};
 	}
 
+	void Update(const ntv::anim::MetaPose* aPtr)
+	{
+		ptr = const_cast<ntv::anim::MetaPose*>(aPtr);
+	}
 
-	Native::anim::MetaPose* ptr = nullptr;
+	ntv::anim::MetaPose* ptr = nullptr;
 };
 
 RTTI_DEFINE_CLASS(MetaPoseScriptRef, "MetaPoseRef",
