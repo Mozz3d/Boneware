@@ -22,19 +22,21 @@ struct AnimationEx : RED4ext::anim::Animation
 		// for some reason animations care about whether argument should be clamped or not?
 		// this is inconvenient the reasons here so we just handle the clamping ourselves regardless
 		float clamped = std::floor(aTime * 30.0f + 0.5f) / 30.0f;
-		NATIVE_CALL(this,Sample(clamped, pose));
+		NTV_CALL(
+		this,Sample(clamped, pose));
 		return outTransforms;
 	}
 
 	RED4ext::DynArray<float> SampleTracks(float aTime)
 	{
-		RED4ext::DynArray<float> outTracks(GetAnimBufferCompressed()->numJoints);
+		RED4ext::DynArray<float> outTracks(GetAnimBufferCompressed()->numTracks);
 		Native::anim::Pose pose{};
 		pose.tracks = outTracks.Data();
 		pose.numTracks = outTracks.Size();
 		pose.numAllTracks = outTracks.Size();
 		float clamped = std::floor(aTime * 30.0f + 0.5f) / 30.0f;
-		NATIVE_CALL(this,Sample(clamped, pose));
+		NTV_CALL(
+		this,Sample(clamped, pose));
 		return outTracks;
 	}
 };

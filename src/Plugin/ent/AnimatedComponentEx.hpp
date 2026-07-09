@@ -13,7 +13,7 @@ struct AnimatedComponentEx : RED4ext::ent::AnimatedComponent
 
     void ForceReferencePose(bool aShouldForce)
     {
-        NATIVE_GET(this,m_rootAnimObjPart)->forceReferencePose = aShouldForce;
+        NTV_GET(this,m_rootAnimObjPart)->forceReferencePose = aShouldForce;
     }
 };
 

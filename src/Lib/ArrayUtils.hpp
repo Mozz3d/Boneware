@@ -1,11 +1,9 @@
 #pragma once
 
-#include <Native/anim/MetaRig.hpp>
-
-namespace Lib::ArrayUtils
+namespace Lib::ArrUtils
 {
 	template<typename T>
-	inline int32_t GetValueIndex(const RED4ext::DynArray<T>& aArray, const T aValue)
+	inline int32_t IndexOf(const RED4ext::DynArray<T>& aArray, const T aValue)
 	{
 		auto it = aArray.Find(aValue);
 		if (it == aArray.End())

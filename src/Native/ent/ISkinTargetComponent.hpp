@@ -24,12 +24,21 @@ struct ApplySkinningInfo
 
 NATIVE_INFO(RED4ext::ent::ISkinTargetComponent)
 {
-	NATIVE_VIRTUAL_FN(bool, OnApplySkinningAndTransform, (ApplySkinningInfo*), 0x298);
+	NATIVE_VIRTUAL_FUNC(
+	bool ,OnApplySkinningAndTransform,(ApplySkinningInfo*), 0x298);
 
-	NATIVE_MEMBER_FN(void, OnTransformUpdated, (RED4ext::Box&), 3853850250);
+	NATIVE_MEMBER_FUNC(
+	void ,OnTransformUpdated,(RED4ext::Box&), 3853850250);
 
-	NATIVE_FIELD(RED4ext::Box, m_restSkinBounds, 0x140);
-	NATIVE_FIELD(RED4ext::Box, m_activeSkinBounds, 0x160);
-	NATIVE_FIELD(RED4ext::TRenderPtr<IRenderSkinningData>, m_skinningBuffer, 0x1b0);
-	NATIVE_FIELD(RED4ext::TRenderPtr<>, m_trackBuffer, 0x1b8);
+	NATIVE_DATA_MEMBER(
+	r4e::Box ,m_restSkinBounds,   0x140);
+
+	NATIVE_DATA_MEMBER(
+	r4e::Box ,m_activeSkinBounds, 0x160);
+
+	NATIVE_DATA_MEMBER(
+	r4e::TRenderPtr<IRenderSkinningData> ,m_skinningBuffer, 0x1b0);
+
+	NATIVE_DATA_MEMBER(
+	r4e::TRenderPtr<>                    ,m_trackBuffer,    0x1b8);
 };

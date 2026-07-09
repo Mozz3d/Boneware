@@ -42,6 +42,11 @@ public func GetBoneNames() -> array<CName> {
 }
 
 @addMethod(Entity)
+public func GetBoneParentIndices() -> array<Int16> {
+    return MetaRigRef.GetBoneParentIndices(this.metaRigRef);
+}
+
+@addMethod(Entity)
 public func GetTrackNames() -> array<CName> {
     return MetaRigRef.GetTrackNames(this.metaRigRef);
 }

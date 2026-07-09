@@ -34,11 +34,9 @@ private:
     const uintptr_t m_address;
 };
 
-
 template<typename TPtr, typename TFunc>
 TPtr pmf_cast(TFunc aFunc) {
     union { TFunc func; TPtr ptr; } pruned;
     pruned.func = aFunc;
     return pruned.ptr;
 }
-

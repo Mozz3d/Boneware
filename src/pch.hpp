@@ -9,6 +9,7 @@
 #include <windows.h>
 
 #include <RED4ext.hpp>
+namespace r4e = RED4ext;
 #include <RedLib.hpp>
 
 #include <RTTITypes.hpp>
@@ -27,9 +28,11 @@
 
 #include <Scripting/Natives/animRig.hpp>
 #include <Scripting/Natives/Vector4.hpp>
+#include <Scripting/Natives/Generated/Transform.hpp>
 #include <Scripting/Natives/Generated/QsTransform.hpp>
 #include <Scripting/Natives/Generated/WorldTransform.hpp>
 
-#include <Lib/VectorMath.hpp>
+#include <Lib/QuaternionUtils.hpp>
+#include <Lib/QsTransformUtils.hpp>
 #include <Lib/ScriptedUtils.hpp>
 #include <Lib/ArrayUtils.hpp>
