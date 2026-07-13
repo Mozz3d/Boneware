@@ -29,10 +29,17 @@ struct AnimatedObjectEx : RED4ext::anim::AnimatedObject
 
 	void Update(ntv::anim::AnimatedObjectUpdateContext& aUpdateCtx)
 	{
+		static constexpr r4e::CName c_shouldAnimUpdate	     = "shouldAnimUpdate";
+		static constexpr r4e::CName c_metaRigRef		     = "metaRigRef";
+		static constexpr r4e::CName c_metaPoseRef			 = "metaPoseRef";
+		static constexpr r4e::CName c_poseOverrideTransforms = "poseOverrideTransforms";
+		static constexpr r4e::CName c_poseAdditiveTransforms = "poseAdditiveTransforms";
+		static constexpr r4e::CName c_poseTrackOverrides	 = "poseTrackOverrides";
+
 		r4e::ent::Entity* entity = aUpdateCtx.m_entity;
 		r4e::CClass* entityClass = entity->GetType();
 
-		if (auto* scriptProp = entityClass->GetProperty("shouldAnimUpdate"))
+		if (auto* scriptProp = entityClass->GetProperty(c_shouldAnimUpdate))
 		{
 			if (auto* shouldUpdate = scriptProp->GetValuePtr<bool>(entity))
 			{
@@ -268,7 +275,7 @@ struct AnimatedObjectEx : RED4ext::anim::AnimatedObject
 
 		if ( aUpdateCtx.m_shouldSampleGraph )
 		{
-			if (auto* scriptProp = entityClass->GetProperty("metaRigRef"))
+			if (auto* scriptProp = entityClass->GetProperty(c_metaRigRef))
 			{
 				if (auto* metaRigRef = scriptProp->GetValuePtr<MetaRigScriptRef>(entity))
 				{
@@ -276,7 +283,7 @@ struct AnimatedObjectEx : RED4ext::anim::AnimatedObject
 				}
 			}
 
-			if (auto* scriptProp = entityClass->GetProperty("metaPoseRef"))
+			if (auto* scriptProp = entityClass->GetProperty(c_metaPoseRef))
 			{
 				if (auto* metaPoseRef = scriptProp->GetValuePtr<MetaPoseScriptRef>(entity))
 				{
@@ -284,7 +291,7 @@ struct AnimatedObjectEx : RED4ext::anim::AnimatedObject
 				}
 			}
 
-			if (auto* scriptProp = entityClass->GetProperty("poseOverrideTransforms"))
+			if (auto* scriptProp = entityClass->GetProperty(c_poseOverrideTransforms))
 			{
 				if (auto* entries = scriptProp->GetValuePtr<RED4ext::DynArray<BoneTransformEntry>>(entity))
 				{
@@ -298,7 +305,7 @@ struct AnimatedObjectEx : RED4ext::anim::AnimatedObject
 				}
 			}
 
-			if (auto* scriptProp = entityClass->GetProperty("poseAdditiveTransforms"))
+			if (auto* scriptProp = entityClass->GetProperty(c_poseAdditiveTransforms))
 			{
 				if (auto* entries = scriptProp->GetValuePtr<RED4ext::DynArray<BoneTransformEntry>>(entity))
 				{
@@ -315,7 +322,7 @@ struct AnimatedObjectEx : RED4ext::anim::AnimatedObject
 				}
 			}
 
-			if (auto* scriptProp = entityClass->GetProperty("poseTrackOverrides"))
+			if (auto* scriptProp = entityClass->GetProperty(c_poseTrackOverrides))
 			{
 				if (auto* entries = scriptProp->GetValuePtr<RED4ext::DynArray<TrackValueEntry>>(entity))
 				{
