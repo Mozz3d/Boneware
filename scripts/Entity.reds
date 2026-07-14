@@ -30,60 +30,60 @@ public func GetMetaPose() -> MetaPose {
 
 @addMethod(Entity)
 public func GetBoneNames() -> array<CName> {
-    return this.metaRig.GetBoneNames();
+    return MetaRig.GetBoneNames(this.metaRig);
 }
 
 @addMethod(Entity)
 public func GetBoneParentIndices() -> array<Int16> {
-    return this.metaRig.GetBoneParentIndices();
+    return MetaRig.GetParentIndices(this.metaRig);
 }
 
 @addMethod(Entity)
 public func GetTrackNames() -> array<CName> {
-    return this.metaRig.GetTrackNames();
+    return MetaRig.GetTrackNames(this.metaRig);
 }
 
 @addMethod(Entity)
-public func GetPoseTransforms() -> array<QsTransform> {
-    return this.metaPose.GetTransforms();
+public func GetPoseTransformsLS() -> array<QsTransform> {
+    return MetaPose.GetTransformsLS(this.metaPose);
 }
 
 @addMethod(Entity)
 public func GetPoseTracks() -> array<Float> {
-    return this.metaPose.GetTracks();
+    return MetaPose.GetTracks(this.metaPose);
 }
 
 @addMethod(Entity)
-public func SetPoseOverrideTransform(name: CName, transform: QsTransform) {
-    this.metaPose.SetOverrideTransformLS(name, transform);
+public func SetPoseOverrideTransformLS(name: CName, transform: QsTransform) {
+    MetaPose.SetOverrideTransformLS(this.metaPose, name, transform);
 }
 
 @addMethod(Entity)
-public func RemovePoseOverrideTransform(name: CName) {
-    this.metaPose.RemoveOverrideTransformLS(name);
+public func RemovePoseOverrideTransformLS(name: CName) {
+    MetaPose.RemoveOverrideTransformLS(this.metaPose, name);
 }
 
 @addMethod(Entity)
-public func ClearPoseOverrideTransforms() {
-    this.metaPose.ClearOverrideTransformsLS();
+public func ClearPoseOverrideTransformsLS() {
+    MetaPose.ClearOverrideTransformsLS(this.metaPose);
 }
 
 @addMethod(Entity)
-public func AddPoseAdditiveTransform(name: CName, transform: QsTransform) {
-    this.metaPose.AddAdditiveTransformLS(name, transform);
+public func AddPoseAdditiveTransformLS(name: CName, transform: QsTransform) {
+    MetaPose.AddAdditiveTransformLS(this.metaPose, name, transform);
 }
 
 @addMethod(Entity)
-public func RemovePoseAdditiveTransform(name: CName) {
-    this.metaPose.RemoveAdditiveTransformLS(name);
+public func RemovePoseAdditiveTransformLS(name: CName) {
+    MetaPose.RemoveAdditiveTransformLS(this.metaPose, name);
 }
 
 @addMethod(Entity)
-public func RemovePoseAdditiveTransforms(name: CName) {
-    this.metaPose.RemovePoseAdditiveTransforms(name);
+public func RemovePoseAdditiveTransformsLS(name: CName) {
+    MetaPose.RemoveAdditiveTransformsLS(this.metaPose, name);
 }
 
 @addMethod(Entity)
-public func ClearPoseAdditiveTransforms() {
-    this.metaPose.ClearAdditiveTransformsLS();
+public func ClearPoseAdditiveTransformsLS() {
+    MetaPose.ClearAdditiveTransformsLS(this.metaPose);
 }
