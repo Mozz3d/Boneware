@@ -1,8 +1,9 @@
 #pragma once
 
+#include <Native/anim/AnimationControlParams.hpp>
+#include <Native/anim/AnimDataContext.hpp>
 #include <Native/anim/AnimGraph.hpp>
 #include <Native/anim/AnimInstanceBuffer.hpp>
-#include <Native/anim/AnimDataContext.hpp>
 #include <Native/anim/MetaPose.hpp>
 #include <Native/anim/Pose.hpp>
 #include <Native/anim/Rig.hpp>
@@ -117,7 +118,7 @@ struct AnimatedObjectPart
 	AnimDataContext m_dataContext;									   // 2548
 	uint8_t unk2560[0x2580 - 0x2560];
 	r4e::DynArray<r4e::anim::AnimGraphExternalEvent> m_externalEvents; // 2580
-	r4e::SharedPtr<void> unkSharedPtr2590;
+	r4e::SharedPtr<AnimationControlParams> m_animControlParams;		   // 2590
 	uint32_t unk25A0;
 	r4e::ent::AnimatedComponent* component;							   // 25a8
 	uint8_t unk25B0;

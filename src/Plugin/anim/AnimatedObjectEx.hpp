@@ -231,16 +231,13 @@ struct AnimatedObjectEx : RED4ext::anim::AnimatedObject
 						part->m_updateSkipped = false;
 					}
 
-					const void* sharedData = part->unkSharedPtr2590.GetPtr();
-					bool shouldCleanStreamingContexts = sharedData && *OffsetPtr<uint32_t,0xBC>(sharedData) != 0;
-
 					if ( NTV_CALL(
 						 part,UpdateInputs(*part)) )
 					{
 						aUpdateCtx.unkD4 = false;
 					}
 
-					if ( shouldCleanStreamingContexts || hasDirtyStreamingContexts )
+					if ((part->m_animControlParams && part->m_animControlParams->unkBC != 0) || hasDirtyStreamingContexts)
 					{
 						NTV_CALL(
 						part->m_dataContext,CleanStreamingContexts(
