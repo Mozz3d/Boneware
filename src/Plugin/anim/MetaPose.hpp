@@ -1,11 +1,12 @@
 #pragma once
 
 #include <Native/anim/MetaPose.hpp>
+#include <Native/anim/MetaRig.hpp>
 
 struct BoneTransformEntry
 {
-	RED4ext::CName name;
-	RED4ext::QsTransform transform;
+	r4e::CName name;
+	r4e::QsTransform transform;
 };
 
 RTTI_DEFINE_CLASS(BoneTransformEntry, {
@@ -15,7 +16,7 @@ RTTI_DEFINE_CLASS(BoneTransformEntry, {
 
 struct TrackValueEntry
 {
-	RED4ext::CName name;
+	r4e::CName name;
 	float value;
 };
 
@@ -24,52 +25,82 @@ RTTI_DEFINE_CLASS(TrackValueEntry, {
 	RTTI_PROPERTY(value);
 });
 
-struct MetaPoseScriptRef
+struct ScriptMetaPose
 {
-	MetaPoseScriptRef() = default;
-
-	r4e::DynArray<r4e::QsTransform> GetTransforms() const
+	r4e::DynArray<BoneTransformEntry> m_overrideTransformsLS;
+	r4e::DynArray<BoneTransformEntry> m_additiveTransformsLS;
+	r4e::DynArray<TrackValueEntry> m_overrideTracks;
+	
+	void UpdateTransformsLS(const r4e::DynArray<r4e::QsTransform>& aTransformsLS)
 	{
-		if (ptr) return ptr->m_transforms;
-		return {};
+		m_transformsLS = aTransformsLS;
 	}
 
-	r4e::QsTransform GetTransform(uint32_t aBoneIdx) const
+	void UpdateTransformsMS(const r4e::DynArray<r4e::QsTransform>& aTransformsMS)
 	{
-		if (ptr && aBoneIdx < ptr->m_transforms.Size())
+		m_transformsMS = aTransformsMS;
+	}
+
+	void UpdateTracks(const r4e::DynArray<float>& aTracks)
+	{
+		m_tracks = aTracks;
+	}
+
+	void UpdateNumBones(uint32_t aNumBones)
+	{
+		m_numBones = aNumBones;
+	}
+
+	void ApplyOverrideTransformsLS(ntv::anim::MetaPose& aMetaPose, const r4e::anim::MetaRig& aMetaRig)
+	{
+		for (const auto& entry : m_overrideTransformsLS)
 		{
-			return ptr->m_transforms[aBoneIdx];
+			int32_t boneIdx = Lib::ArrUtils::IndexOf(aMetaRig.boneNames, entry.name);
+			if (boneIdx < 0 || boneIdx >= aMetaPose.m_transforms.Size()) continue;
+
+			aMetaPose.m_transforms[boneIdx] = entry.transform;
 		}
-		return {};
 	}
 
-	r4e::DynArray<float> GetTracks() const
+	void ApplyAdditiveTransformsLS(ntv::anim::MetaPose& aMetaPose, const r4e::anim::MetaRig& aMetaRig)
 	{
-		if (ptr) return ptr->m_tracks;
-		return {};
-	}
-
-	float GetTrack(uint32_t aTrackIndex) const
-	{
-		if (ptr && aTrackIndex < ptr->m_tracks.Size())
+		for (const auto& entry : m_additiveTransformsLS)
 		{
-			return ptr->m_tracks[aTrackIndex];
+			int32_t boneIdx = Lib::ArrUtils::IndexOf(aMetaRig.boneNames, entry.name);
+			if (boneIdx < 0 || boneIdx >= aMetaPose.m_transforms.Size()) continue;
+
+			r4e::QsTransform& poseTransform = aMetaPose.m_transforms[boneIdx];
+			poseTransform.Translation += entry.transform.Translation;
+			poseTransform.Rotation *= entry.transform.Rotation;
+			poseTransform.Scale *= entry.transform.Scale;
 		}
-		return {};
 	}
 
-	void Update(const ntv::anim::MetaPose* aPtr)
+	void ApplyOverrideTracks(ntv::anim::MetaPose& aMetaPose, const r4e::anim::MetaRig& aMetaRig)
 	{
-		ptr = const_cast<ntv::anim::MetaPose*>(aPtr);
+		for (const auto& entry : m_overrideTracks)
+		{
+			int32_t trackIdx = Lib::ArrUtils::IndexOf(aMetaRig.trackNames, entry.name);
+			if (trackIdx < 0 || trackIdx >= aMetaPose.m_tracks.Size()) continue;
+
+			aMetaPose.m_tracks[trackIdx] = entry.value;
+		}
 	}
 
-	ntv::anim::MetaPose* ptr = nullptr;
+	r4e::DynArray<r4e::QsTransform> m_transformsLS;
+	r4e::DynArray<r4e::QsTransform> m_transformsMS;
+	r4e::DynArray<float> m_tracks;
+	uint32_t m_numBones;
 };
 
-RTTI_DEFINE_CLASS(MetaPoseScriptRef, "MetaPoseRef",
+RTTI_DEFINE_CLASS(ScriptMetaPose, "MetaPose",
 {
-	RTTI_METHOD(GetTransforms);
-	RTTI_METHOD(GetTransform);
-	RTTI_METHOD(GetTracks);
-	RTTI_METHOD(GetTrack);
+	RTTI_PROPERTY(m_numBones,	  "numBones");
+	RTTI_PROPERTY(m_transformsLS, "transformsLS");
+	RTTI_PROPERTY(m_transformsMS, "transformsMS");
+	RTTI_PROPERTY(m_tracks,		  "tracks");
+
+	RTTI_PROPERTY(m_overrideTransformsLS, "overrideTransformsLS");
+	RTTI_PROPERTY(m_additiveTransformsLS, "additiveTransformsLS");
+	RTTI_PROPERTY(m_overrideTracks,		  "overrideTracks");
 });

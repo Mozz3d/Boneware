@@ -9,24 +9,119 @@ public native struct TrackValueEntry {
     public native let value: Float;
 }
 
-public native struct MetaPoseRef {
-    public static native func GetTransforms(self: script_ref<MetaPoseRef>) -> array<QsTransform>
-    public static native func GetTransform(self: script_ref<MetaPoseRef>, boneIndex: Int32) -> QsTransform
-    public static native func GetTracks(self: script_ref<MetaPoseRef>) -> array<Float>
-    public static native func GetTrack(self: script_ref<MetaPoseRef>, trackIndex: Int32) -> Float
+public native struct MetaPose {
+    public native let overrideTransformsLS: array<BoneTransformEntry>;
+    public native let additiveTransformsLS: array<BoneTransformEntry>;
+    public native let overrideTracks: array<TrackValueEntry>;
+
+    public func SetOverrideTransformLS(name: CName, transform: QsTransform) {
+        let i = 0;
+        while i < ArraySize(this.overrideTransformsLS) {
+            if Equals(this.overrideTransformsLS[i].name, name) {
+                this.overrideTransformsLS[i].transform = transform;
+                return;
+            }
+            i += 1;
+        }
+        let entry = new BoneTransformEntry();
+        entry.name = name;
+        entry.transform = transform;
+        ArrayPush(this.overrideTransformsLS, entry);
+    }
+
+    public func RemoveOverrideTransformLS(name: CName) {
+        let i = 0;
+        while i < ArraySize(this.overrideTransformsLS) {
+            if Equals(this.overrideTransformsLS[i].name, name) {
+                ArrayErase(this.overrideTransformsLS, i);
+                return;
+            }
+            i += 1;
+        }
+    }
+
+    public func ClearOverrideTransformsLS() {
+        ArrayClear(this.overrideTransformsLS);
+    }
+
+    public func AddAdditiveTransformLS(name: CName, transform: QsTransform) {
+        let entry = new BoneTransformEntry();
+        entry.name = name;
+        entry.transform = transform;
+        ArrayPush(this.additiveTransformsLS, entry);
+    }
+
+    public func RemoveAdditiveTransformLS(name: CName) {
+        let i = ArraySize(this.additiveTransformsLS) - 1;
+        while i >= 0 {
+            if Equals(this.additiveTransformsLS[i].name, name) {
+                ArrayErase(this.additiveTransformsLS, i);
+                return;
+            }
+            i -= 1;
+        }
+    }
+
+    public func RemoveAdditiveTransformsLS(name: CName) {
+        let i = ArraySize(this.additiveTransformsLS) - 1;
+        while i >= 0 {
+            if Equals(this.additiveTransformsLS[i].name, name) {
+                ArrayErase(this.additiveTransformsLS, i);
+            }
+            i -= 1;
+        }
+    }
+
+    public func ClearAdditiveTransformsLS() {
+        ArrayClear(this.additiveTransformsLS);
+    }
+
+    private native let numBones: Uint32;
+    private native let transformsLS: array<QsTransform>;
+    private native let transformsMS: array<QsTransform>;
+    private native let tracks: array<Float>;
+
+    public func GetNumBones() -> Uint32 {
+        return numBones;
+    }
+
+    public func GetTransformsLS() -> array<QsTransform> {
+        return transformsLS;
+    }
+
+    public func GetTransformsMS() -> array<QsTransform> {
+        return transformsMS;
+    }
+    
+    public func GetTracks() -> array<Float> {
+        return tracks;
+    }
 }
 
-public native struct MetaRigRef {
-    public static native func GetBoneTransforms(self: script_ref<MetaRigRef>) -> array<QsTransform>
-    public static native func GetBoneTransform(self: script_ref<MetaRigRef>, boneIndex: Uint32) -> QsTransform
-    public static native func GetBoneParentIndices(self: script_ref<MetaRigRef>) -> array<Int16>
-    public static native func GetBoneNames(self: script_ref<MetaRigRef>) -> array<CName>
-    public static native func GetBoneName(self: script_ref<MetaRigRef>, boneIndex: Int32) -> CName
-    public static native func GetBoneIndex(self: script_ref<MetaRigRef>, boneName: CName) -> Int32
+public native struct MetaRig {
+    private native let transforms: array<QsTransform>;
+    private native let parentIndices: array<Int16>;
+    private native let boneNames: array<CName>;
+    private native let tracks: array<Float>;
+    private native let trackNames: array<CName>;
 
-    public static native func GetTrackValues(self: script_ref<MetaRigRef>) -> array<Float>
-    public static native func GetTrackValue(self: script_ref<MetaRigRef>, trackIndex: Uint32) -> Float
-    public static native func GetTrackNames(self: script_ref<MetaRigRef>) -> array<CName>
-    public static native func GetTrackName(self: script_ref<MetaRigRef>, trackIndex: Int32) -> CName
-    public static native func GetTrackIndex(self: script_ref<MetaRigRef>, trackname: CName) -> Int32
+    public func GetTransforms() -> array<QsTransform> {
+        return transforms;
+    }
+    
+    public func GetParentIndices() -> array<Int16> {
+        return parentIndices;
+    }
+
+    public func GetBoneNames() -> array<CName> {
+        return boneNames;
+    }
+    
+    public func GetTracks() -> array<Float> {
+        return tracks;
+    }
+    
+    public func GetTrackNames() -> array<CName> {
+        return trackNames;
+    }
 }

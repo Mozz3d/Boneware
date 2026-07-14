@@ -29,12 +29,9 @@ struct AnimatedObjectEx : RED4ext::anim::AnimatedObject
 
 	void Update(ntv::anim::AnimatedObjectUpdateContext& aUpdateCtx)
 	{
-		static constexpr r4e::CName c_shouldAnimUpdate	     = "shouldAnimUpdate";
-		static constexpr r4e::CName c_metaRigRef		     = "metaRigRef";
-		static constexpr r4e::CName c_metaPoseRef			 = "metaPoseRef";
-		static constexpr r4e::CName c_poseOverrideTransforms = "poseOverrideTransforms";
-		static constexpr r4e::CName c_poseAdditiveTransforms = "poseAdditiveTransforms";
-		static constexpr r4e::CName c_poseTrackOverrides	 = "poseTrackOverrides";
+		static constexpr r4e::CName c_shouldAnimUpdate = "shouldAnimUpdate";
+		static constexpr r4e::CName c_metaRig		   = "metaRig";
+		static constexpr r4e::CName c_metaPose		   = "metaPose";
 
 		r4e::ent::Entity* entity = aUpdateCtx.m_entity;
 		r4e::CClass* entityClass = entity->GetType();
@@ -67,6 +64,14 @@ struct AnimatedObjectEx : RED4ext::anim::AnimatedObject
 
 		const r4e::anim::MetaRig& _metaRig = *NTV_GET(
 											  this,m_metaRigRef).m_metaRig;
+
+		if (auto* scriptProp = entityClass->GetProperty(c_metaRig))
+		{
+			if (auto* scriptMetaRig = scriptProp->GetValuePtr<ScriptMetaRig>(entity))
+			{
+				scriptMetaRig->Update(_metaRig);
+			}
+		}
 
 		ntv::anim::MetaPose& metaPose = *NTV_GET(
 										 this,m_metaPose);
@@ -275,69 +280,31 @@ struct AnimatedObjectEx : RED4ext::anim::AnimatedObject
 
 		if ( aUpdateCtx.m_shouldSampleGraph )
 		{
-			if (auto* scriptProp = entityClass->GetProperty(c_metaRigRef))
+			ScriptMetaPose* scriptMetaPose = nullptr;
+
+			if (auto* scriptProp = entityClass->GetProperty(c_metaPose))
 			{
-				if (auto* metaRigRef = scriptProp->GetValuePtr<MetaRigScriptRef>(entity))
-				{
-					metaRigRef->Update(&_metaRig);
-				}
+				scriptMetaPose = scriptProp->GetValuePtr<ScriptMetaPose>(entity);
 			}
 
-			if (auto* scriptProp = entityClass->GetProperty(c_metaPoseRef))
+			if (scriptMetaPose)
 			{
-				if (auto* metaPoseRef = scriptProp->GetValuePtr<MetaPoseScriptRef>(entity))
-				{
-					metaPoseRef->Update(&metaPose);
-				}
-			}
+				scriptMetaPose->UpdateNumBones(_metaRig.boneNames.Size());
+				scriptMetaPose->UpdateTransformsLS(metaPose.m_transforms);
+				scriptMetaPose->UpdateTracks(metaPose.m_tracks);
 
-			if (auto* scriptProp = entityClass->GetProperty(c_poseOverrideTransforms))
-			{
-				if (auto* entries = scriptProp->GetValuePtr<RED4ext::DynArray<BoneTransformEntry>>(entity))
-				{
-					for (const auto& entry : *entries)
-					{
-						int32_t boneIdx = Lib::ArrUtils::IndexOf(_metaRig.boneNames, entry.name);
-						if (boneIdx < 0 || boneIdx >= metaPose.m_transforms.Size()) continue;
-
-						metaPose.m_transforms[boneIdx] = entry.transform;
-					}
-				}
-			}
-
-			if (auto* scriptProp = entityClass->GetProperty(c_poseAdditiveTransforms))
-			{
-				if (auto* entries = scriptProp->GetValuePtr<RED4ext::DynArray<BoneTransformEntry>>(entity))
-				{
-					for (const auto& entry : *entries)
-					{
-						int32_t boneIdx = Lib::ArrUtils::IndexOf(_metaRig.boneNames, entry.name);
-						if (boneIdx < 0 || boneIdx >= metaPose.m_transforms.Size()) continue;
-
-						RED4ext::QsTransform& poseTransform = metaPose.m_transforms[boneIdx];
-						poseTransform.Translation += entry.transform.Translation;
-						poseTransform.Rotation	  *= entry.transform.Rotation;
-						poseTransform.Scale		  *= entry.transform.Scale;
-					}
-				}
-			}
-
-			if (auto* scriptProp = entityClass->GetProperty(c_poseTrackOverrides))
-			{
-				if (auto* entries = scriptProp->GetValuePtr<RED4ext::DynArray<TrackValueEntry>>(entity))
-				{
-					for (const auto& entry : *entries)
-					{
-						int32_t trackIdx = Lib::ArrUtils::IndexOf(_metaRig.trackNames, entry.name);
-						if (trackIdx < 0 || trackIdx >= metaPose.m_tracks.Size()) continue;
-
-						metaPose.m_tracks[trackIdx] = entry.value;
-					}
-				}
+				scriptMetaPose->ApplyOverrideTransformsLS(metaPose, _metaRig);
+				scriptMetaPose->ApplyAdditiveTransformsLS(metaPose, _metaRig);
+				scriptMetaPose->ApplyOverrideTracks(metaPose, _metaRig);
 			}
 
 			NTV_CALL(
 			metaPose,CalcMS(_metaRig));
+
+			if (scriptMetaPose)
+			{
+				scriptMetaPose->UpdateTransformsMS(metaPose.m_transforms);
+			}
 		}
 
 		if ( hasDirtyStreamingContexts )
