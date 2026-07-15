@@ -14,12 +14,18 @@ using AnimEventCallback = RED4ext::Callback<
 
 class AnimInstanceBufferLayout
 {
+	struct RuntimeInputInfo
+	{
+		uint8_t unk00[0x20 - 0x00];
+	};
+
 	uint32_t unk00;
 	uint32_t unk04;
 	uint32_t unk08;
-	uint8_t unk0C[0x20 - 0x08];
-	RED4ext::HashMap<std::pair<RED4ext::CName, RED4ext::CName>, uint16_t> m_inputsIndexMap;
-	RED4ext::Map<RED4ext::CName, RED4ext::DynArray<AnimEventCallback>> m_eventCallbacksMap;
+	r4e::DynArray<RuntimeInputInfo> m_runtimeInputs;
+	r4e::HashMap<std::pair<r4e::CName, r4e::CName>, uint16_t> m_inputsIndexMap;
+	r4e::Map<r4e::CName, r4e::DynArray<AnimEventCallback>> m_eventCallbacksMap;
+	uint32_t unk78;
 };
 RED4EXT_ASSERT_SIZE(AnimInstanceBufferLayout, 0x80);
 }

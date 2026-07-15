@@ -2,7 +2,7 @@
 
 namespace Native::anim
 {
-// the overcomplicated way CDPR handles accesing info in the AnimInstanceBuffer
+// the overcomplicated way CDPR handles accessing info in the AnimInstanceBuffer
 struct AnimInstanceVar
 {
 	virtual RED4ext::Memory::IAllocator* GetAllocator() = 0;
