@@ -5,8 +5,8 @@
 #include <Native/anim/AnimatedObject.hpp>
 #include <Native/simd/QsTransform.hpp>
 #include <Native/simd/QuadHelper.hpp>
-#include <Plugin/anim/MetaPose.hpp>
-#include <Plugin/anim/MetaRig.hpp>
+#include <Plugin/anim/ScriptMetaPose.hpp>
+#include <Plugin/anim/ScriptMetaRig.hpp>
 
 #include <Lib/RigUtils.hpp>
 

@@ -1,8 +1,6 @@
 #pragma once
 
 #include <Native/ent/AnimatedComponent.hpp>
-#include <Plugin/anim/MetaRig.hpp>
-#include <Plugin/anim/MetaPose.hpp>
 
 struct AnimatedComponentEx : RED4ext::ent::AnimatedComponent
 {
