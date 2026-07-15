@@ -6,11 +6,13 @@ struct ISkinTargetComponentEx : RED4ext::ent::ISkinTargetComponent
 {
 	void OnTransformUpdated(RED4ext::Box& aOutBounds)
 	{
+		static constexpr r4e::CName c_visualScale = "visualScale";
+
 		aOutBounds = NTV_CALL(
 					 worldTransform,TransformBox(NTV_GET(this,m_activeSkinBounds)));
 
 		RED4ext::Vector3 visualScale{ 1.f, 1.f, 1.f };
-		if (auto* scriptProp = GetType()->GetProperty("visualScale"))
+		if (auto* scriptProp = GetType()->GetProperty(c_visualScale))
 		{
 			if (auto* value = scriptProp->GetValuePtr<RED4ext::Vector3>(this))
 			{

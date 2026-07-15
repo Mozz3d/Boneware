@@ -10,7 +10,6 @@ namespace Lib::ArrUtils
 		{
 			return -1;
 		}
-		uint32_t index = static_cast<uint32_t>(std::distance(aArray.Begin(), it));
-		return index;
+		return static_cast<uint32_t>(std::distance(aArray.Begin(), it));
 	}
 }

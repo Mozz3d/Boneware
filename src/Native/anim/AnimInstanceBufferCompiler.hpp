@@ -11,7 +11,9 @@ struct AnimInstanceBufferCompiler
 	struct InputInfo
 	{
 		AnimInstanceVar* m_var;
-		uint8_t unk08[0x28 - 0x08];
+		uint32_t m_size;
+		uint32_t m_align;
+		uint8_t unk10[0x28 - 0x10];
 	};
 
 	struct VarInfo
