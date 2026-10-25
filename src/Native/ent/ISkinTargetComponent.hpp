@@ -37,8 +37,8 @@ NATIVE_INFO(RED4ext::ent::ISkinTargetComponent)
 	r4e::Box ,m_activeSkinBounds, 0x160);
 
 	NATIVE_DATA_MEMBER(
-	r4e::TRenderPtr<IRenderSkinningData> ,m_skinningBuffer, 0x1b0);
+	r4e::TRenderPtr<IRenderSkinningData> ,m_skinningBuffer, 0x1b8);
 
 	NATIVE_DATA_MEMBER(
-	r4e::TRenderPtr<>                    ,m_trackBuffer,    0x1b8);
+	r4e::TRenderPtr<>                    ,m_trackBuffer,    0x1c0);
 };
